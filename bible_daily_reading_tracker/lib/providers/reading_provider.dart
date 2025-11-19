@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import '../data/models/daily_schedule.dart';
-import '../data/models/reading_task.dart';
 import '../data/models/user_progress.dart';
 import '../data/repositories/reading_repository.dart';
 
