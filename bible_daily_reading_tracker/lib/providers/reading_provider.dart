@@ -1,0 +1,105 @@
+import 'package:flutter/foundation.dart';
+import '../data/models/daily_schedule.dart';
+import '../data/models/reading_task.dart';
+import '../data/models/user_progress.dart';
+import '../data/repositories/reading_repository.dart';
+
+/// Provider for managing reading state
+class ReadingProvider with ChangeNotifier {
+  final ReadingRepository _repository;
+  
+  DailySchedule? _currentSchedule;
+  UserProgress? _userProgress;
+  bool _isLoading = false;
+  String? _error;
+
+  ReadingProvider({ReadingRepository? repository})
+      : _repository = repository ?? ReadingRepository();
+
+  // Getters
+  DailySchedule? get currentSchedule => _currentSchedule;
+  UserProgress? get userProgress => _userProgress;
+  bool get isLoading => _isLoading;
+  String? get error => _error;
+  bool get hasData => _currentSchedule != null;
+  
+  /// Get today's reading schedule
+  int get completedTasksCount => _currentSchedule?.completedCount ?? 0;
+  int get totalTasksCount => _currentSchedule?.totalCount ?? 0;
+  bool get allTasksCompleted => _currentSchedule?.allCompleted ?? false;
+  double get completionPercentage => _currentSchedule?.completionPercentage ?? 0.0;
+
+  /// Initialize and load today's schedule
+  Future<void> loadTodaySchedule() async {
+    _setLoading(true);
+    _error = null;
+
+    try {
+      _currentSchedule = _repository.getTodaySchedule();
+      _userProgress = _repository.getUserProgress();
+      notifyListeners();
+    } catch (e) {
+      _error = 'Failed to load schedule: $e';
+      debugPrint(_error);
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  /// Toggle task completion with animation support
+  Future<void> toggleTask(String taskId) async {
+    if (_currentSchedule == null) return;
+
+    try {
+      final scheduleDate = _currentSchedule!.date.toIso8601String();
+      await _repository.toggleTaskCompletion(scheduleDate, taskId);
+      
+      // Reload schedule and progress
+      _currentSchedule = _repository.getTodaySchedule();
+      _userProgress = _repository.getUserProgress();
+      
+      notifyListeners();
+    } catch (e) {
+      _error = 'Failed to toggle task: $e';
+      debugPrint(_error);
+      notifyListeners();
+    }
+  }
+
+  /// Refresh data
+  Future<void> refresh() async {
+    await loadTodaySchedule();
+  }
+
+  /// Check if there's a new week streak achievement
+  bool hasWeekStreakAchievement() {
+    return _repository.hasNewWeekStreakAchievement();
+  }
+
+  /// Get missed days count
+  int getMissedDays() {
+    return _repository.getMissedDaysCount();
+  }
+
+  /// Get current streak
+  int getCurrentStreak() {
+    return _userProgress?.currentStreak ?? 0;
+  }
+
+  /// Get longest streak
+  int getLongestStreak() {
+    return _userProgress?.longestStreak ?? 0;
+  }
+
+  /// Reset all data (for testing)
+  Future<void> resetAllData() async {
+    await _repository.resetAll();
+    await loadTodaySchedule();
+  }
+
+  /// Set loading state
+  void _setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+}
