@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         elevation: 0,
                         flexibleSpace: FlexibleSpaceBar(
                           title: Text(
-                            'Daily Reading',
+                            'BasaTrAck',
                             style: theme.textTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -149,26 +149,48 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             const SizedBox(height: 16),
                             
-                            // Date Header
+                            // Week and Day Header
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppConstants.spacing,
                               ),
-                              child: Row(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.calendar_today_rounded,
-                                    size: 20,
-                                    color: AppColors.primary,
+                                  // Week Number
+                                  Text(
+                                    'Week ${_getWeekNumber()}',
+                                    style: theme.textTheme.headlineSmall?.copyWith(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  const SizedBox(height: 4),
+                                  // Day with name
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_today_rounded,
+                                        size: 18,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Day ${_getDayOfWeek()} (${_getDayName()})',
+                                        style: theme.textTheme.titleMedium?.copyWith(
+                                          color: AppColors.textSecondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  // Date
                                   Text(
                                     app_date_utils.DateUtils.formatFullDate(
                                       schedule?.date ?? DateTime.now(),
                                     ),
-                                    style: theme.textTheme.titleLarge?.copyWith(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.w600,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: AppColors.textSecondary,
                                     ),
                                   ),
                                 ],
@@ -324,5 +346,60 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  /// Calculate which day of the 728-day plan we're on
+  int _getDayOfPlan() {
+    final now = DateTime.now();
+    // Plan starts on January 4
+    final startDate = DateTime(now.year, 1, 4);
+    final daysSinceStart = now.difference(startDate).inDays + 1;
+    
+    // If before start date, use day 1
+    if (daysSinceStart < 1) {
+      return 1;
+    }
+    
+    return ((daysSinceStart - 1) % 728) + 1; // Cycle through 728 days
+  }
+
+  /// Get current week number (1-104)
+  int _getWeekNumber() {
+    final dayOfPlan = _getDayOfPlan();
+    final weekNumber = ((dayOfPlan - 1) ~/ 7) + 1;
+    // Ensure week number is always between 1 and 104
+    return weekNumber.clamp(1, 104);
+  }
+
+  /// Get current day of week (1-7) based on actual calendar day
+  /// Lord's Day (Sunday) = 1, Monday = 2, ..., Saturday = 7
+  int _getDayOfWeek() {
+    final now = DateTime.now();
+    // DateTime.weekday: Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6, Sun=7
+    // Convert to: Sun=1, Mon=2, Tue=3, Wed=4, Thu=5, Fri=6, Sat=7
+    return (now.weekday % 7) + 1;
+  }
+
+  /// Get day name
+  String _getDayName() {
+    final dayOfWeek = _getDayOfWeek();
+    switch (dayOfWeek) {
+      case 1:
+        return "Lord's Day";
+      case 2:
+        return 'Monday';
+      case 3:
+        return 'Tuesday';
+      case 4:
+        return 'Wednesday';
+      case 5:
+        return 'Thursday';
+      case 6:
+        return 'Friday';
+      case 7:
+        return 'Saturday';
+      default:
+        return '';
+    }
   }
 }

@@ -114,28 +114,12 @@ class _StreakBadgeState extends State<StreakBadge>
                   size: 20,
                 ),
                 const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${widget.currentStreak} Day${widget.currentStreak == 1 ? '' : 's'}',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: widget.isWeekStreak ? Colors.white : streakColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (widget.longestStreak > widget.currentStreak)
-                      Text(
-                        'Best: ${widget.longestStreak}',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: widget.isWeekStreak
-                              ? Colors.white.withOpacity(0.9)
-                              : AppColors.textSecondary,
-                          fontSize: 10,
-                        ),
-                      ),
-                  ],
+                Text(
+                  '${widget.currentStreak} Day${widget.currentStreak == 1 ? '' : 's'}',
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: widget.isWeekStreak ? Colors.white : streakColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
