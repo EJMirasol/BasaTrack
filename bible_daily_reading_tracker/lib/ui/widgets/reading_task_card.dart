@@ -45,13 +45,13 @@ class ReadingTaskCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppConstants.borderRadius),
               color: task.isCompleted
-                  ? AppColors.success.withOpacity(0.1)
-                  : theme.cardColor,
+                  ? AppColors.success.withOpacity(0.15)
+                  : const Color(0xFFE8F5E9), // Light green background
               border: Border.all(
                 color: task.isCompleted
-                    ? AppColors.success.withOpacity(0.3)
+                    ? AppColors.success.withOpacity(0.4)
                     : Colors.transparent,
-                width: 1.5,
+                width: 1,
               ),
             ),
             child: Row(

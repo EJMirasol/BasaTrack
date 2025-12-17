@@ -48,6 +48,12 @@ app.*.map.json
 # Hive database files
 *.hive
 *.lock
+*.md5
+*.sha1
+*.bin
 
-#MD Files
+#MD and rules Files
 /FIREBASE_SETUP.md
+/firestore.rules
+
+

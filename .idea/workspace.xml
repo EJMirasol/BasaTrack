@@ -5,32 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5af097b4-bd70-4793-bf27-93104b7761ef" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.3/checksums/md5-checksums.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.3/checksums/sha1-checksums.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.3/dependencies-accessors/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.3/fileChanges/last-build.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.3/fileHashes/fileHashes.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.3/fileHashes/resourceHashesCache.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.3/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/checksums/sha1-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/8.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/ios/Flutter/Generated.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/ios/Flutter/Generated.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/ios/Flutter/flutter_export_environment.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/ios/Flutter/flutter_export_environment.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/ios/Runner/GeneratedPluginRegistrant.m" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/ios/Runner/GeneratedPluginRegistrant.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/android/app/google-services.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/data/repositories/reading_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/data/repositories/reading_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/providers/reading_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/providers/reading_provider.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/ui/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/ui/widgets/reading_task_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/bible_daily_reading_tracker/lib/ui/widgets/reading_task_card.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

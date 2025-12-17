@@ -189,6 +189,47 @@ class ReadingRepository {
     return progress.currentStreak;
   }
 
+  /// Get week schedules for the current week (Sunday to Saturday)
+  List<DailySchedule> getCurrentWeekSchedules() {
+    final now = DateTime.now();
+    // Calculate Sunday of current week (Lord's Day = 0)
+    final currentWeekday = now.weekday % 7; // Sun=0, Mon=1, ..., Sat=6
+    final sundayDate = now.subtract(Duration(days: currentWeekday));
+    
+    final weekSchedules = <DailySchedule>[];
+    for (int i = 0; i < 7; i++) {
+      final date = sundayDate.add(Duration(days: i));
+      weekSchedules.add(getScheduleForDate(date));
+    }
+    
+    return weekSchedules;
+  }
+
+  /// Get all missed schedules (past days with incomplete tasks)
+  List<DailySchedule> getMissedSchedules() {
+    final now = DateTime.now();
+    final today = _normalizeDate(now);
+    final missedSchedules = <DailySchedule>[];
+    
+    // Check up to 30 days back for missed schedules
+    for (int i = 1; i <= 30; i++) {
+      final date = today.subtract(Duration(days: i));
+      final schedule = _storageService.getSchedule(date);
+      
+      // Only include if schedule exists and has incomplete tasks
+      if (schedule != null && !schedule.allCompleted) {
+        missedSchedules.add(schedule);
+      }
+    }
+    
+    return missedSchedules;
+  }
+
+  /// Get count of missed days with incomplete tasks
+  int getIncompleteMissedDaysCount() {
+    return getMissedSchedules().length;
+  }
+
   /// Reset all data (for testing)
   Future<void> resetAll() async {
     await _storageService.clearAll();

@@ -9,7 +9,7 @@ import 'providers/reading_provider.dart';
 import 'providers/streak_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/sync_provider.dart';
-import 'ui/screens/home_screen.dart';
+import 'ui/screens/main_navigation.dart';
 import 'ui/screens/login_screen.dart';
 
 void main() async {
@@ -100,7 +100,7 @@ class BibleDailyReadingApp extends StatelessWidget {
                   syncProvider.performInitialSync();
                 }
               });
-              return const HomeScreen();
+              return const MainNavigation();
             }
 
             // Otherwise, show login screen
@@ -116,14 +116,14 @@ class BibleDailyReadingApp extends StatelessWidget {
                 builder: (_) => Consumer<AuthProvider>(
                   builder: (context, authProvider, child) {
                     return authProvider.isSignedIn
-                        ? const HomeScreen()
+                        ? const MainNavigation()
                         : const LoginScreen();
                   },
                 ),
               );
             case '/home':
               return MaterialPageRoute(
-                builder: (_) => const HomeScreen(),
+                builder: (_) => const MainNavigation(),
               );
             case '/login':
               return MaterialPageRoute(
@@ -134,7 +134,7 @@ class BibleDailyReadingApp extends StatelessWidget {
                 builder: (_) => Consumer<AuthProvider>(
                   builder: (context, authProvider, child) {
                     return authProvider.isSignedIn
-                        ? const HomeScreen()
+                        ? const MainNavigation()
                         : const LoginScreen();
                   },
                 ),

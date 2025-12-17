@@ -12,7 +12,20 @@
           "package_name": "com.lrph.bible_daily_reading_tracker"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "585556619456-9ajnn1janjudnmhgdp2av8mgej0bl439.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lrph.bible_daily_reading_tracker",
+            "certificate_hash": "c48ce737128bf6d65c58d4c20d80f644f8f275b6"
+          }
+        },
+        {
+          "client_id": "585556619456-otdum64r7sdqposcaaq60tokkrctflvk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC8t0z2f07tXOQqC2ypndZ_09xG7nghzmE"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "585556619456-otdum64r7sdqposcaaq60tokkrctflvk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "585556619456-6m7kqbp0du2j1bngm56j9npl7odkgoqn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lrph.bibleDailyReadingTracker"
+              }
+            }
+          ]
         }
       }
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../data/services/auth_service.dart';
 import '../data/models/app_user.dart';
+import '../data/repositories/storage_service.dart';
 
 /// Provider for managing authentication state
 class AuthProvider with ChangeNotifier {
@@ -52,6 +53,12 @@ class AuthProvider with ChangeNotifier {
     _error = null;
 
     try {
+      // Clear local storage before signing out
+      // This prevents the next user from seeing previous user's data
+      final storageService = StorageService();
+      await storageService.clearAll();
+      
+      // Sign out from Firebase
       await _authService.signOut();
       _currentUser = null;
       notifyListeners();

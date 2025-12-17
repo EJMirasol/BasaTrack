@@ -46,11 +46,12 @@ class ReadingProvider with ChangeNotifier {
   }
 
   /// Toggle task completion with animation support
-  Future<void> toggleTask(String taskId) async {
-    if (_currentSchedule == null) return;
-
+  Future<void> toggleTask(String taskId, {DateTime? date}) async {
     try {
-      final scheduleDate = _currentSchedule!.date.toIso8601String();
+      final targetDate = date ?? _currentSchedule?.date;
+      if (targetDate == null) return;
+
+      final scheduleDate = targetDate.toIso8601String();
       await _repository.toggleTaskCompletion(scheduleDate, taskId);
       
       // Reload schedule and progress
@@ -88,6 +89,38 @@ class ReadingProvider with ChangeNotifier {
   /// Get longest streak
   int getLongestStreak() {
     return _userProgress?.longestStreak ?? 0;
+  }
+
+  /// Get current week's schedules (7 days: Sunday to Saturday)
+  List<DailySchedule> getWeekSchedules() {
+    return _repository.getCurrentWeekSchedules();
+  }
+
+  /// Get week completion status for calendar (7 booleans)
+  List<bool> getWeekCompletionStatus() {
+    final weekSchedules = getWeekSchedules();
+    return weekSchedules.map((schedule) => schedule.allCompleted).toList();
+  }
+
+  /// Get current day index in week (0=Sunday/LD, 6=Saturday)
+  int getCurrentDayIndex() {
+    final now = DateTime.now();
+    return now.weekday % 7; // Sun=0, Mon=1, ..., Sat=6
+  }
+
+  /// Get all missed schedules (past incomplete days)
+  List<DailySchedule> getMissedSchedules() {
+    return _repository.getMissedSchedules();
+  }
+
+  /// Check if there are incomplete missed days (for reminder card)
+  bool hasIncompleteMissedDays() {
+    return _repository.getIncompleteMissedDaysCount() > 0;
+  }
+
+  /// Get count of incomplete missed days
+  int getIncompleteMissedDaysCount() {
+    return _repository.getIncompleteMissedDaysCount();
   }
 
   /// Reset all data (for testing)

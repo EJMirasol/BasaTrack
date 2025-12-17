@@ -111,13 +111,18 @@ class SyncProvider with ChangeNotifier {
 
   /// Sync today's schedule only
   Future<void> syncTodaySchedule() async {
+    await syncScheduleForDate(DateTime.now());
+  }
+
+  /// Sync a specific schedule date
+  Future<void> syncScheduleForDate(DateTime date) async {
     final userId = _authProvider.currentUserId;
     if (userId == null || !_connectivityService.isOnline) {
       return;
     }
 
     try {
-      await _syncRepository.syncDailySchedule(userId, DateTime.now());
+      await _syncRepository.syncDailySchedule(userId, date);
       _lastSyncTime = DateTime.now();
       notifyListeners();
     } catch (e) {

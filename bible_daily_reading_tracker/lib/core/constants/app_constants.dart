@@ -3,7 +3,7 @@ class AppConstants {
   AppConstants._();
 
   // App Information
-  static const String appName = 'Bible Daily Reading Tracker';
+  static const String appName = 'BasaTrack';
   static const String appVersion = '1.0.0';
 
   // Storage Keys
