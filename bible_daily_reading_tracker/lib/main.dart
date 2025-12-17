@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_constants.dart';
 import 'data/repositories/storage_service.dart';
 import 'providers/reading_provider.dart';
 import 'providers/streak_provider.dart';
+import 'providers/auth_provider.dart';
+import 'providers/sync_provider.dart';
 import 'ui/screens/home_screen.dart';
+import 'ui/screens/login_screen.dart';
 
 void main() async {
   // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
 
   // Initialize local storage
   final storageService = StorageService();
@@ -42,9 +49,24 @@ class BibleDailyReadingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // Authentication Provider (first, as others depend on it)
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        ),
+        // Sync Provider (depends on auth)
+        ChangeNotifierProxyProvider<AuthProvider, SyncProvider>(
+          create: (context) => SyncProvider(
+            authProvider: context.read<AuthProvider>(),
+          ),
+          update: (context, auth, previous) => previous ?? SyncProvider(
+            authProvider: auth,
+          ),
+        ),
+        // Reading Provider
         ChangeNotifierProvider(
           create: (_) => ReadingProvider(),
         ),
+        // Streak Provider
         ChangeNotifierProvider(
           create: (_) => StreakProvider(),
         ),
@@ -58,19 +80,64 @@ class BibleDailyReadingApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
 
-        // Home Screen
-        home: const HomeScreen(),
+        // Authentication-based routing
+        home: Consumer2<AuthProvider, SyncProvider>(
+          builder: (context, authProvider, syncProvider, child) {
+            // Show loading while checking auth state
+            if (authProvider.isLoading) {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+
+            // If signed in, show home screen
+            if (authProvider.isSignedIn) {
+              // Perform initial sync on first sign-in
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (syncProvider.lastSyncTime == null) {
+                  syncProvider.performInitialSync();
+                }
+              });
+              return const HomeScreen();
+            }
+
+            // Otherwise, show login screen
+            return const LoginScreen();
+          },
+        ),
 
         // Route Configuration
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case '/':
               return MaterialPageRoute(
+                builder: (_) => Consumer<AuthProvider>(
+                  builder: (context, authProvider, child) {
+                    return authProvider.isSignedIn
+                        ? const HomeScreen()
+                        : const LoginScreen();
+                  },
+                ),
+              );
+            case '/home':
+              return MaterialPageRoute(
                 builder: (_) => const HomeScreen(),
+              );
+            case '/login':
+              return MaterialPageRoute(
+                builder: (_) => const LoginScreen(),
               );
             default:
               return MaterialPageRoute(
-                builder: (_) => const HomeScreen(),
+                builder: (_) => Consumer<AuthProvider>(
+                  builder: (context, authProvider, child) {
+                    return authProvider.isSignedIn
+                        ? const HomeScreen()
+                        : const LoginScreen();
+                  },
+                ),
               );
           }
         },

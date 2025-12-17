@@ -48,3 +48,6 @@ app.*.map.json
 # Hive database files
 *.hive
 *.lock
+
+#MD Files
+/FIREBASE_SETUP.md

@@ -2,6 +2,7 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
 }
 
 def localProperties = new Properties()
@@ -23,7 +24,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.basatrack.bible_daily_reading_tracker"
+    namespace "com.lrph.bible_daily_reading_tracker"
     compileSdk 36
     ndkVersion flutter.ndkVersion
 
@@ -41,11 +42,12 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.basatrack.bible_daily_reading_tracker"
+        applicationId "com.lrph.bible_daily_reading_tracker"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {

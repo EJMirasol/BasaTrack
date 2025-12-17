@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/reading_provider.dart';
 import '../../providers/streak_provider.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/sync_provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../../utils/date_utils.dart' as app_date_utils;
@@ -9,6 +11,7 @@ import '../widgets/reading_task_card.dart';
 import '../widgets/success_message.dart';
 import '../widgets/missed_days_alert.dart';
 import '../widgets/streak_badge.dart';
+import '../widgets/sync_indicator.dart';
 import '../animations/celebration_animation.dart';
 
 /// Main home screen of the app
@@ -32,11 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadData() async {
     final readingProvider = context.read<ReadingProvider>();
     final streakProvider = context.read<StreakProvider>();
+    final syncProvider = context.read<SyncProvider>();
     
     await Future.wait([
       readingProvider.loadTodaySchedule(),
       streakProvider.loadProgress(),
     ]);
+    
+    // Trigger sync if online
+    await syncProvider.syncAll();
   }
 
   Future<void> _onRefresh() async {
@@ -56,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
               : AppColors.backgroundGradient,
         ),
         child: SafeArea(
-          child: Consumer2<ReadingProvider, StreakProvider>(
-            builder: (context, readingProvider, streakProvider, child) {
+          child: Consumer4<ReadingProvider, StreakProvider, AuthProvider, SyncProvider>(
+            builder: (context, readingProvider, streakProvider, authProvider, syncProvider, child) {
               if (readingProvider.isLoading) {
                 return const Center(
                   child: CircularProgressIndicator(),
@@ -128,7 +135,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           centerTitle: true,
                         ),
+                        leading: Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Center(
+                            child: SizedBox(
+                              width: 70,
+                              child: SyncIndicator(syncProvider: syncProvider),
+                            ),
+                          ),
+                        ),
                         actions: [
+                          // Streak Badge
                           Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: Center(
@@ -138,6 +155,50 @@ class _HomeScreenState extends State<HomeScreen> {
                                 isWeekStreak: isWeekStreak,
                               ),
                             ),
+                          ),
+                          // Profile Menu
+                          PopupMenuButton<void>(
+                            icon: CircleAvatar(
+                              radius: 16,
+                              backgroundImage: authProvider.currentUser?.photoURL != null
+                                  ? NetworkImage(authProvider.currentUser!.photoURL!)
+                                  : null,
+                              child: authProvider.currentUser?.photoURL == null
+                                  ? const Icon(Icons.person, size: 20)
+                                  : null,
+                            ),
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                enabled: false,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      authProvider.currentUser?.displayName ?? 'User',
+                                      style: theme.textTheme.titleSmall,
+                                    ),
+                                    if (authProvider.currentUser?.email != null)
+                                      Text(
+                                        authProvider.currentUser!.email!,
+                                        style: theme.textTheme.bodySmall,
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuDivider(),
+                              PopupMenuItem(
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.logout),
+                                    SizedBox(width: 8),
+                                    Text('Sign Out'),
+                                  ],
+                                ),
+                                onTap: () async {
+                                  await authProvider.signOut();
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -323,9 +384,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               final task = schedule.tasks[index];
                               return ReadingTaskCard(
                                 task: task,
-                                onToggle: (checked) {
-                                  readingProvider.toggleTask(task.id);
-                                  streakProvider.refresh();
+                                onToggle: (checked) async {
+                                  await readingProvider.toggleTask(task.id);
+                                  await streakProvider.refresh();
+                                  // Sync after task completion
+                                  await syncProvider.syncTodaySchedule();
                                 },
                               );
                             },

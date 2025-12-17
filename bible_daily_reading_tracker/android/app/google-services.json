@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "585556619456",
+    "project_id": "basatrack",
+    "storage_bucket": "basatrack.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:585556619456:android:906fa728a09db1c755fd25",
+        "android_client_info": {
+          "package_name": "com.lrph.bible_daily_reading_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8t0z2f07tXOQqC2ypndZ_09xG7nghzmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
