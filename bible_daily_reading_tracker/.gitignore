@@ -51,6 +51,7 @@ app.*.map.json
 *.md5
 *.sha1
 *.bin
+*.salive
 
 #MD and rules Files
 /FIREBASE_SETUP.md
