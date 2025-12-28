@@ -77,4 +77,37 @@ class DateUtils {
     
     return formatShortDate(date);
   }
+
+  /// Get the first Sunday (Lord's Day) of January for a given year
+  /// This is used as the starting point for the reading plan (week 1, day 1)
+  static DateTime getFirstSundayOfJanuary(int year) {
+    // Start with January 1
+    DateTime date = DateTime(year, 1, 1);
+    
+    // weekday: 1=Monday, 2=Tuesday, ..., 7=Sunday
+    // We want to find the first Sunday (weekday == 7)
+    while (date.weekday != DateTime.sunday) {
+      date = date.add(const Duration(days: 1));
+    }
+    
+    return date;
+  }
+
+  /// Calculate days since the first Sunday of January for a given date
+  /// Returns the number of days (1-based) from the first Sunday
+  static int getDaysSinceFirstSunday(DateTime date) {
+    final firstSunday = getFirstSundayOfJanuary(date.year);
+    final normalizedDate = normalizeDate(date);
+    final normalizedFirstSunday = normalizeDate(firstSunday);
+    
+    final daysSince = daysBetween(normalizedFirstSunday, normalizedDate);
+    
+    // If date is before first Sunday, return 0 (will be handled as day 1 in repository)
+    if (daysSince < 0) {
+      return 0;
+    }
+    
+    // Return 1-based day count (day 1 = first Sunday)
+    return daysSince + 1;
+  }
 }
