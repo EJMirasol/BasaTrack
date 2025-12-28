@@ -372,6 +372,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             return ReadingTaskCard(
                               task: task,
                               onToggle: (checked) async {
+                                // Only show confirmation if this is the LAST uncompleted task
+                                if (checked && !task.isCompleted) {
+                                  // Count how many tasks are currently incomplete
+                                  final incompleteTasks = missedSchedule.tasks
+                                      .where((t) => !t.isCompleted)
+                                      .length;
+                                  
+                                  // Show confirmation only if this is the last one (1 incomplete task remaining)
+                                  if (incompleteTasks == 1) {
+                                    final confirmed = await _showBacklogConfirmation(context);
+                                    if (!confirmed) {
+                                      return; // User cancelled
+                                    }
+                                  }
+                                }
+                                
                                 await readingProvider.toggleTask(
                                   task.id,
                                   date: missedSchedule.date,
@@ -458,6 +474,107 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  /// Show confirmation dialog before allowing backlog task completion
+  Future<bool> _showBacklogConfirmation(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        final theme = Theme.of(context);
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.orange.shade700,
+                size: 28,
+              ),
+              const SizedBox(width: 12),
+              const Text('Confirm Completion'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'You are about to mark a backlog task as complete.',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.red.shade200,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.red.shade700,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Once checked, this action CANNOT be undone.',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.red.shade900,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Do you want to proceed?',
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Confirm',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+    
+    return result ?? false;
   }
 
   /// Calculate which day of the 728-day plan we're on
