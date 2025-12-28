@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/reading_provider.dart';
-import '../../providers/sync_provider.dart';
-import '../../providers/streak_provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../utils/date_utils.dart' as app_date_utils;
 import '../widgets/reading_task_card.dart';
@@ -98,22 +96,11 @@ class BacklogScreen extends StatelessWidget {
                         ),
                       ),
                       
-                      // Incomplete Tasks
+                      // Incomplete Tasks (Read-only in backlog)
                       ...incompleteTasks.map((task) {
                         return ReadingTaskCard(
                           task: task,
-                          onToggle: (checked) async {
-                            final syncProvider = context.read<SyncProvider>();
-                            final streakProvider = context.read<StreakProvider>();
-                            
-                            await readingProvider.toggleTask(
-                              task.id,
-                              date: schedule.date,
-                            );
-                            await streakProvider.refresh();
-                            // Sync the specific backlog date to Firebase
-                            await syncProvider.syncScheduleForDate(schedule.date);
-                          },
+                          // No onToggle - tasks are read-only in backlog
                         );
                       }),
                       

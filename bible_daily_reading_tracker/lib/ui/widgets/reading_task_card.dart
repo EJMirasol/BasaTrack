@@ -34,10 +34,12 @@ class ReadingTaskCard extends StatelessWidget {
             ? AppColors.shadowLight
             : AppColors.shadowDark,
         child: InkWell(
-          onTap: () {
-            HapticFeedback.lightImpact();
-            onToggle?.call(!task.isCompleted);
-          },
+          onTap: onToggle != null
+              ? () {
+                  HapticFeedback.lightImpact();
+                  onToggle?.call(!task.isCompleted);
+                }
+              : null, // Disable tap when read-only
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           child: AnimatedContainer(
             duration: AppConstants.mediumAnimation,
@@ -56,14 +58,16 @@ class ReadingTaskCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Animated Checkbox
-                AnimatedCheck(
-                  isChecked: task.isCompleted,
-                  onChanged: onToggle,
-                  size: 28,
-                ),
+                // Animated Checkbox (only show when interactive)
+                if (onToggle != null)
+                  AnimatedCheck(
+                    isChecked: task.isCompleted,
+                    onChanged: onToggle,
+                    size: 28,
+                  ),
                 
-                const SizedBox(width: 16),
+                // Spacing (only when checkbox is shown)
+                if (onToggle != null) const SizedBox(width: 16),
                 
                 // Reading Reference
                 Expanded(
