@@ -46,6 +46,9 @@ class SyncProvider with ChangeNotifier {
 
   /// Perform initial sync after sign-in
   Future<void> performInitialSync() async {
+    // Skip sync for guest users
+    if (_authProvider.isGuest) return;
+    
     final userId = _authProvider.currentUserId;
     if (userId == null) return;
 
@@ -67,6 +70,9 @@ class SyncProvider with ChangeNotifier {
 
   /// Sync all data
   Future<void> syncAll() async {
+    // Skip sync for guest users
+    if (_authProvider.isGuest) return;
+    
     final userId = _authProvider.currentUserId;
     if (userId == null || !_connectivityService.isOnline) {
       return;
@@ -93,6 +99,9 @@ class SyncProvider with ChangeNotifier {
 
   /// Sync user progress only
   Future<void> syncProgress() async {
+    // Skip sync for guest users
+    if (_authProvider.isGuest) return;
+    
     final userId = _authProvider.currentUserId;
     if (userId == null || !_connectivityService.isOnline) {
       return;
@@ -116,6 +125,9 @@ class SyncProvider with ChangeNotifier {
 
   /// Sync a specific schedule date
   Future<void> syncScheduleForDate(DateTime date) async {
+    // Skip sync for guest users
+    if (_authProvider.isGuest) return;
+    
     final userId = _authProvider.currentUserId;
     if (userId == null || !_connectivityService.isOnline) {
       return;

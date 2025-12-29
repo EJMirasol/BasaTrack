@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // Primary Colors - Peaceful Blue
-  static const Color primary = Color(0xFF4A90E2);
-  static const Color primaryLight = Color(0xFF7FB3F0);
-  static const Color primaryDark = Color(0xFF2E5C8A);
+  // Primary Colors - Logo Teal Blue
+  static const Color primary = Color(0xFF2C5F7C);
+  static const Color primaryLight = Color(0xFF4A8BA8);
+  static const Color primaryDark = Color(0xFF1E3D4F);
 
-  // Secondary Colors - Warm Gold
-  static const Color secondary = Color(0xFFFFD700);
-  static const Color secondaryLight = Color(0xFFFFE44D);
-  static const Color secondaryDark = Color(0xFFDAA520);
+  // Secondary Colors - Logo Gold
+  static const Color secondary = Color(0xFFC9A54E);
+  static const Color secondaryLight = Color(0xFFDBC07A);
+  static const Color secondaryDark = Color(0xFFB08A2E);
 
   // Success Colors - Encouraging Green
   static const Color success = Color(0xFF4CAF50);

@@ -15,8 +15,11 @@ class AuthProvider with ChangeNotifier {
       : _authService = authService ?? AuthService() {
     // Listen to auth state changes
     _authService.authStateChanges.listen((user) {
-      _currentUser = user;
-      notifyListeners();
+      // Only update if not a guest user (don't overwrite guest state with null)
+      if (_currentUser?.isGuest != true) {
+        _currentUser = user;
+        notifyListeners();
+      }
     });
   }
 
@@ -25,6 +28,7 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isSignedIn => _currentUser != null;
+  bool get isGuest => _currentUser?.isGuest ?? false;
   String? get currentUserId => _currentUser?.uid;
 
   /// Sign in with Google
@@ -47,6 +51,26 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  /// Sign in as guest (local only, no Firebase auth)
+  Future<bool> signInAsGuest() async {
+    _setLoading(true);
+    _error = null;
+
+    try {
+      // Create a local guest user
+      _currentUser = AppUser.guest();
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = 'Guest sign in failed: ${e.toString()}';
+      debugPrint(_error);
+      notifyListeners();
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   /// Sign out
   Future<void> signOut() async {
     _setLoading(true);
@@ -58,8 +82,10 @@ class AuthProvider with ChangeNotifier {
       final storageService = StorageService();
       await storageService.clearAll();
       
-      // Sign out from Firebase
-      await _authService.signOut();
+      // Only sign out from Firebase if not a guest
+      if (!isGuest) {
+        await _authService.signOut();
+      }
       _currentUser = null;
       notifyListeners();
     } catch (e) {

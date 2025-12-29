@@ -75,10 +75,9 @@ class BibleDailyReadingApp extends StatelessWidget {
         title: AppConstants.appName,
         debugShowCheckedModeBanner: false,
         
-        // Theme Configuration
+        // Theme Configuration (Dark mode disabled - always use light theme)
         theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.light,
 
         // Authentication-based routing
         home: Consumer2<AuthProvider, SyncProvider>(
