@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
-                  // Guest Mode Warning Banner
+                  // Offline Warning Banner
                   if (authProvider.isGuest)
                     SliverToBoxAdapter(
                       child: Container(
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Guest Mode',
+                                    'Offline Mode',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.orange.shade900,
@@ -385,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
 
                   // Week Streak Celebration (when 7-day streak achieved)
-                  if (streakProvider.showWeekStreakCelebration && schedule?.allCompleted == true && !readingProvider.hasIncompleteMissedDays())
+                  if (streakProvider.showWeekStreakCelebration && schedule?.allCompleted == true)
                     SliverToBoxAdapter(
                       child: GestureDetector(
                         onTap: () {

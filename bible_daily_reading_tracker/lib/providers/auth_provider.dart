@@ -84,7 +84,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  /// Prepare for Google Sign-In while in guest mode
+  /// Prepare for Google Sign-In while in offline mode
   /// Resets internal user state to null but DOES NOT clear local storage
   void prepareForSignInFromGuest() {
     _currentUser = null;
