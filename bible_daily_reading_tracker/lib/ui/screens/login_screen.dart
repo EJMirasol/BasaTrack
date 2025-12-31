@@ -108,19 +108,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           // Google Sign-In Button
                           ElevatedButton.icon(
-                            onPressed: () async {
-                              final success = await authProvider.signInWithGoogle();
-                              if (!success && mounted) {
-                                // Show error if sign-in failed
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      authProvider.error ?? 'Sign in failed',
-                                    ),
-                                    backgroundColor: AppColors.error,
+                            onPressed: () {
+                              // Inform user feature is under development
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Google Sign-In is currently under development. Please use Offline mode for now.',
                                   ),
-                                );
-                              }
+                                  backgroundColor: AppColors.primary,
+                                  duration: Duration(seconds: 4),
+                                ),
+                              );
                             },
                             icon: Image.asset(
                               'assets/google_logo.png',
@@ -130,7 +128,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return const Icon(Icons.login, size: 24);
                               },
                             ),
-                            label: const Text('Sign in with Google'),
+                            label: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Sign in with Google'),
+                                Text(
+                                  '(Under Development)',
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: Colors.orange.shade800,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                               foregroundColor: Colors.black87,
@@ -174,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Continue as Guest',
+                                  'Continue in Offline Mode',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -256,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 size: 28,
               ),
               const SizedBox(width: 12),
-              const Text('Guest Mode'),
+              const Text('Offline Mode'),
             ],
           ),
           content: Column(
@@ -264,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'You are about to continue as a guest.',
+                'You are about to continue in offline mode.',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -289,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Your reading progress will NOT be saved. Sign in with Google to sync your data across devices.',
+                        'Your reading progress will be saved locally on this device, but it will be PERMANENTLY LOST if you uninstall the app or clear its data. Sign in with Google (under development) will be required to sync your data across devices.',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: Colors.orange.shade900,
                           fontWeight: FontWeight.w500,
@@ -327,7 +338,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               child: const Text(
-                'Continue as Guest',
+                'Continue in Offline Mode',
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ),

@@ -37,11 +37,15 @@ class AuthProvider with ChangeNotifier {
   bool get isGuest => _currentUser?.isGuest ?? false;
   String? get currentUserId => _currentUser?.uid;
 
-  /// Sign in with Google
+  /// Sign in with Google (Currently disabled - under development)
   Future<bool> signInWithGoogle() async {
     _setLoading(true);
-    _error = null;
+    _error = 'Google Sign-In is currently under development. Please use Offline mode for now.';
+    notifyListeners();
+    _setLoading(false);
+    return false;
 
+    /* Original implementation - disabled
     try {
       final user = await _authService.signInWithGoogle();
       if (user != null) {
@@ -57,6 +61,7 @@ class AuthProvider with ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+    */
   }
 
   /// Sign in as guest (local only, no Firebase auth)
