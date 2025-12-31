@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../data/models/user_progress.dart';
 import '../data/repositories/reading_repository.dart';
 import '../core/constants/app_constants.dart';
+import '../utils/date_utils.dart' as app_date_utils;
 
 /// Provider for managing streak tracking and achievements
 class StreakProvider with ChangeNotifier {
@@ -9,7 +10,6 @@ class StreakProvider with ChangeNotifier {
   
   UserProgress? _progress;
   bool _showWeekStreakCelebration = false;
-  bool _hasShownWeekStreakToday = false;
 
   StreakProvider({ReadingRepository? repository})
       : _repository = repository ?? ReadingRepository();
@@ -46,10 +46,31 @@ class StreakProvider with ChangeNotifier {
     try {
       _progress = _repository.getUserProgress();
       
+      // Reset celebration status at the start of check
+      _showWeekStreakCelebration = false;
+      
       // Check for week streak achievement
-      if (currentStreak == AppConstants.weekStreakDays && !_hasShownWeekStreakToday) {
+      // Show if currentStreak >= 7 AND it's Saturday
+      // AND we haven't shown it for this SPECIFIC week yet
+      final lastShownDate = _progress?.lastWeekStreakShownDate;
+      final today = DateTime.now();
+      final isSaturday = today.weekday == DateTime.saturday;
+      
+      bool alreadyShownThisWeek = false;
+      if (lastShownDate != null) {
+        // Calculate week indices to see if they are the same week
+        final todayDays = app_date_utils.DateUtils.getDaysSinceFirstSunday(today);
+        final shownDays = app_date_utils.DateUtils.getDaysSinceFirstSunday(lastShownDate);
+        
+        // Week index (0-based)
+        final todayWeek = (todayDays - 1) ~/ 7;
+        final shownWeek = (shownDays - 1) ~/ 7;
+        
+        alreadyShownThisWeek = (todayWeek == shownWeek);
+      }
+      
+      if (isSaturday && currentStreak >= AppConstants.weekStreakDays && !alreadyShownThisWeek) {
         _showWeekStreakCelebration = true;
-        _hasShownWeekStreakToday = true;
       }
       
       notifyListeners();
@@ -59,8 +80,15 @@ class StreakProvider with ChangeNotifier {
   }
 
   /// Dismiss week streak celebration
-  void dismissWeekStreakCelebration() {
+  Future<void> dismissWeekStreakCelebration() async {
     _showWeekStreakCelebration = false;
+    
+    // Save that we've shown the celebration for this current week
+    if (_progress != null) {
+      _progress!.lastWeekStreakShownDate = DateTime.now();
+      await _repository.updateProgress(_progress!);
+    }
+    
     notifyListeners();
   }
 

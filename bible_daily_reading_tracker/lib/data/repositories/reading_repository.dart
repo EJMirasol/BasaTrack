@@ -61,15 +61,15 @@ class ReadingRepository {
     // Save updated schedule
     await _storageService.saveSchedule(schedule);
     
-    // Only process for today's date
-    if (_isToday(date)) {
-      if (!wasAllCompleted && isNowAllCompleted) {
-        // Completed all tasks → increment
-        await _updateProgressForCompletedDay(date);
-      } else if (wasAllCompleted && !isNowAllCompleted) {
-        // Unchecked a task after completing all → decrement
-        await _removeProgressForDay(date);
-      }
+    // Always check for progress update regardless of whether it's today
+    // This allows backlogs to count towards streaks
+    if (!wasAllCompleted && isNowAllCompleted) {
+      // Completed all tasks → increment
+      await _updateProgressForCompletedDay(date);
+    } else if (wasAllCompleted && !isNowAllCompleted) {
+      // Unchecked a task after completing all → decrement
+      // Only decrement if it was the last read date to avoid mess in history
+      await _removeProgressForDay(date);
     }
   }
 
@@ -87,8 +87,8 @@ class ReadingRepository {
       task.completedAt = DateTime.now();
       await _storageService.saveSchedule(schedule);
       
-      // Update progress if all tasks completed and it's today
-      if (schedule.allCompleted && _isToday(date)) {
+      // Update progress if all tasks completed
+      if (schedule.allCompleted) {
         await _updateProgressForCompletedDay(date);
       }
     }
@@ -109,12 +109,6 @@ class ReadingRepository {
       progress.completeDay(date);
       await _storageService.saveProgress(progress);
     }
-  }
-
-  /// Check if date is today
-  bool _isToday(DateTime date) {
-    final now = DateTime.now();
-    return _isSameDay(date, now);
   }
 
   /// Check if two dates are the same day

@@ -23,13 +23,14 @@ class UserProgressAdapter extends TypeAdapter<UserProgress> {
       totalDaysRead: fields[3] as int,
       consecutiveMissedDays: fields[4] as int,
       startDate: fields[5] as DateTime?,
+      lastWeekStreakShownDate: fields[6] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserProgress obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.currentStreak)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class UserProgressAdapter extends TypeAdapter<UserProgress> {
       ..writeByte(4)
       ..write(obj.consecutiveMissedDays)
       ..writeByte(5)
-      ..write(obj.startDate);
+      ..write(obj.startDate)
+      ..writeByte(6)
+      ..write(obj.lastWeekStreakShownDate);
   }
 
   @override

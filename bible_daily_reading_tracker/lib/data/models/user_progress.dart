@@ -23,6 +23,9 @@ class UserProgress extends HiveObject {
   @HiveField(5)
   DateTime? startDate;
 
+  @HiveField(6)
+  DateTime? lastWeekStreakShownDate;
+
   UserProgress({
     this.currentStreak = 0,
     this.longestStreak = 0,
@@ -30,6 +33,7 @@ class UserProgress extends HiveObject {
     this.totalDaysRead = 0,
     this.consecutiveMissedDays = 0,
     this.startDate,
+    this.lastWeekStreakShownDate,
   });
 
   /// Update progress after completing a day's reading
@@ -110,6 +114,7 @@ class UserProgress extends HiveObject {
     int? totalDaysRead,
     int? consecutiveMissedDays,
     DateTime? startDate,
+    DateTime? lastWeekStreakShownDate,
   }) {
     return UserProgress(
       currentStreak: currentStreak ?? this.currentStreak,
@@ -118,6 +123,7 @@ class UserProgress extends HiveObject {
       totalDaysRead: totalDaysRead ?? this.totalDaysRead,
       consecutiveMissedDays: consecutiveMissedDays ?? this.consecutiveMissedDays,
       startDate: startDate ?? this.startDate,
+      lastWeekStreakShownDate: lastWeekStreakShownDate ?? this.lastWeekStreakShownDate,
     );
   }
 
@@ -130,6 +136,7 @@ class UserProgress extends HiveObject {
       'totalDaysRead': totalDaysRead,
       'consecutiveMissedDays': consecutiveMissedDays,
       'startDate': startDate?.toIso8601String(),
+      'lastWeekStreakShownDate': lastWeekStreakShownDate?.toIso8601String(),
     };
   }
 
@@ -145,6 +152,9 @@ class UserProgress extends HiveObject {
       consecutiveMissedDays: json['consecutiveMissedDays'] as int? ?? 0,
       startDate: json['startDate'] != null
           ? DateTime.parse(json['startDate'] as String)
+          : null,
+      lastWeekStreakShownDate: json['lastWeekStreakShownDate'] != null
+          ? DateTime.parse(json['lastWeekStreakShownDate'] as String)
           : null,
     );
   }
