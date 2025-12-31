@@ -15,8 +15,14 @@ class AuthProvider with ChangeNotifier {
       : _authService = authService ?? AuthService() {
     // Listen to auth state changes
     _authService.authStateChanges.listen((user) {
-      // Only update if not a guest user (don't overwrite guest state with null)
-      if (_currentUser?.isGuest != true) {
+      // If we get a real user, always update (even if current is guest)
+      if (user != null) {
+        _currentUser = user;
+        notifyListeners();
+      } 
+      // If we get null, only update if the current user is NOT a guest
+      // This prevents guest state from being cleared by background auth changes
+      else if (_currentUser?.isGuest != true) {
         _currentUser = user;
         notifyListeners();
       }
@@ -38,7 +44,9 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final user = await _authService.signInWithGoogle();
-      _currentUser = user;
+      if (user != null) {
+        _currentUser = user;
+      }
       notifyListeners();
       return user != null;
     } catch (e) {
@@ -71,21 +79,29 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  /// Prepare for Google Sign-In while in guest mode
+  /// Resets internal user state to null but DOES NOT clear local storage
+  void prepareForSignInFromGuest() {
+    _currentUser = null;
+    notifyListeners();
+  }
+
   /// Sign out
   Future<void> signOut() async {
     _setLoading(true);
     _error = null;
 
     try {
-      // Clear local storage before signing out
-      // This prevents the next user from seeing previous user's data
-      final storageService = StorageService();
-      await storageService.clearAll();
-      
-      // Only sign out from Firebase if not a guest
+      // Only clear local storage if NOT a guest (authenticated user)
+      // This allows guest progress to be retained on the device
+      // while protecting privacy for signed-in users.
       if (!isGuest) {
+        final storageService = StorageService();
+        await storageService.clearAll();
+        
         await _authService.signOut();
       }
+
       _currentUser = null;
       notifyListeners();
     } catch (e) {

@@ -1,4 +1,5 @@
 import '../models/daily_schedule.dart';
+import '../models/reading_task.dart';
 import '../models/user_progress.dart';
 import '../services/firestore_service.dart';
 import './storage_service.dart';
@@ -77,14 +78,14 @@ class SyncRepository {
       final localSchedule = _storageService.getSchedule(date);
       final cloudSchedule = await _firestoreService.getDailySchedule(userId, date);
 
-      // If local exists, use it (local is source of truth for tasks)
-      if (localSchedule != null) {
+      // Merge both versions
+      final mergedSchedule = _mergeDailySchedule(localSchedule, cloudSchedule);
+
+      if (mergedSchedule != null) {
         await Future.wait([
-          _firestoreService.saveDailySchedule(userId, localSchedule),
+          _storageService.saveSchedule(mergedSchedule),
+          _firestoreService.saveDailySchedule(userId, mergedSchedule),
         ]);
-      } else if (cloudSchedule != null) {
-        // If only cloud exists, sync to local
-        await _storageService.saveSchedule(cloudSchedule);
       }
     } catch (e) {
       throw SyncException('Failed to sync daily schedule: $e');
@@ -117,15 +118,13 @@ class SyncRepository {
     }
   }
 
-  /// Merge user progress (cloud takes precedence for streaks)
+  /// Merge user progress (cloud takes precedence for streaks, but we take highest values)
   UserProgress _mergeUserProgress(
     UserProgress local,
     UserProgress? cloud,
   ) {
     if (cloud == null) return local;
 
-    // Cloud takes precedence for most fields
-    // But we take the highest values for streaks
     return UserProgress(
       currentStreak: cloud.currentStreak > local.currentStreak
           ? cloud.currentStreak
@@ -133,32 +132,111 @@ class SyncRepository {
       longestStreak: cloud.longestStreak > local.longestStreak
           ? cloud.longestStreak
           : local.longestStreak,
-      lastReadDate: cloud.lastReadDate ?? local.lastReadDate,
+      lastReadDate: cloud.lastReadDate != null && local.lastReadDate != null
+          ? (cloud.lastReadDate!.isAfter(local.lastReadDate!) 
+              ? cloud.lastReadDate 
+              : local.lastReadDate)
+          : (cloud.lastReadDate ?? local.lastReadDate),
       totalDaysRead: cloud.totalDaysRead > local.totalDaysRead
           ? cloud.totalDaysRead
           : local.totalDaysRead,
-      consecutiveMissedDays: cloud.consecutiveMissedDays,
+      consecutiveMissedDays: cloud.consecutiveMissedDays < local.consecutiveMissedDays
+          ? cloud.consecutiveMissedDays
+          : local.consecutiveMissedDays,
       startDate: cloud.startDate ?? local.startDate,
     );
+  }
+
+  /// Merge daily schedules (a task is completed if it's true in either)
+  DailySchedule? _mergeDailySchedule(DailySchedule? local, DailySchedule? cloud) {
+    if (local == null) return cloud;
+    if (cloud == null) return local;
+
+    final mergedTasks = <ReadingTask>[];
+    
+    // Create a map of tasks from cloud for easy lookup
+    final cloudTaskMap = {for (var t in cloud.tasks) t.id: t};
+
+    for (var localTask in local.tasks) {
+      final cloudTask = cloudTaskMap[localTask.id];
+      if (cloudTask != null) {
+        final isCompleted = localTask.isCompleted || cloudTask.isCompleted;
+        final completedAt = localTask.isCompleted 
+            ? (localTask.completedAt ?? cloudTask.completedAt) 
+            : cloudTask.completedAt;
+
+        mergedTasks.add(localTask.copyWith(
+          isCompleted: isCompleted,
+          completedAt: completedAt,
+        ));
+      } else {
+        mergedTasks.add(localTask);
+      }
+    }
+
+    return local.copyWith(tasks: mergedTasks);
   }
 
   /// Perform initial sync on first sign-in
   Future<void> performInitialSync(String userId) async {
     try {
-      // Check if cloud has any data
+      // 1. Fetch cloud data
       final cloudProgress = await _firestoreService.getUserProgress(userId);
+      final cloudSchedules = await _firestoreService.getAllSchedules(userId);
       
-      if (cloudProgress == null) {
-        // First time user - sync local to cloud
-        await syncLocalToCloud(userId);
-      } else {
-        // Existing user - sync cloud to local and merge
-        await syncCloudToLocal(userId);
-        await syncUserProgress(userId);
+      // 2. Fetch local data
+      final localProgress = _storageService.getProgress();
+      final localSchedules = _storageService.getAllSchedules();
+      
+      // 3. Merge UserProgress
+      final mergedProgress = _mergeUserProgress(localProgress, cloudProgress);
+      
+      // 4. Merge DailySchedules
+      final Map<String, DailySchedule> mergedSchedulesMap = {};
+      final cloudSchedulesMap = {
+        for (var s in cloudSchedules) _getDateKey(s.date): s
+      };
+      
+      // Merge local into map
+      for (var localSchedule in localSchedules) {
+        final key = _getDateKey(localSchedule.date);
+        final cloudSchedule = cloudSchedulesMap[key];
+        mergedSchedulesMap[key] = _mergeDailySchedule(localSchedule, cloudSchedule)!;
+        // Remove from cloud map to track what's left
+        cloudSchedulesMap.remove(key);
+      }
+      
+      // Add remaining cloud schedules that weren't in local
+      for (var cloudSchedule in cloudSchedulesMap.values) {
+        final key = _getDateKey(cloudSchedule.date);
+        mergedSchedulesMap[key] = cloudSchedule;
+      }
+      
+      // 5. Save everything back to both sources
+      await Future.wait([
+        _storageService.saveProgress(mergedProgress),
+        _firestoreService.saveUserProgress(userId, mergedProgress),
+      ]);
+      
+      if (mergedSchedulesMap.isNotEmpty) {
+        final mergedList = mergedSchedulesMap.values.toList();
+        
+        // Save to local
+        for (var schedule in mergedList) {
+          await _storageService.saveSchedule(schedule);
+        }
+        
+        // Batch save to Firestore
+        await _firestoreService.batchSaveSchedules(userId, mergedList);
       }
     } catch (e) {
       throw SyncException('Failed to perform initial sync: $e');
     }
+  }
+
+  /// Generate a consistent date key
+  String _getDateKey(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 }
 

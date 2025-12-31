@@ -157,8 +157,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             TextButton(
-                              onPressed: () async {
-                                await authProvider.signOut();
+                              onPressed: () {
+                                authProvider.prepareForSignInFromGuest();
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: AppColors.primary,
