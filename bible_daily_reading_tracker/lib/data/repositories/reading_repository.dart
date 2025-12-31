@@ -208,16 +208,16 @@ class ReadingRepository {
     final today = _normalizeDate(now);
     final missedSchedules = <DailySchedule>[];
     
-    // Get the first Sunday of January for the current year
-    final firstSunday = utils.DateUtils.getFirstSundayOfJanuary(now.year);
-    final normalizedFirstSunday = _normalizeDate(firstSunday);
+    // Get the reading plan start date
+    final planStart = ReadingPlanData.planStartDate;
+    final normalizedPlanStart = _normalizeDate(planStart);
     
-    // Calculate days to check (from first Sunday to yesterday)
-    final daysToCheck = today.difference(normalizedFirstSunday).inDays;
+    // Calculate days to check (from plan start to yesterday)
+    final daysToCheck = today.difference(normalizedPlanStart).inDays;
     
     // Generate and check all schedules from first Sunday to yesterday
     for (int i = 0; i < daysToCheck; i++) {
-      final date = normalizedFirstSunday.add(Duration(days: i));
+      final date = normalizedPlanStart.add(Duration(days: i));
       
       // This will create the schedule if it doesn't exist
       final schedule = getScheduleForDate(date);
@@ -241,19 +241,9 @@ class ReadingRepository {
     await _storageService.clearAll();
   }
 
-  /// Get day of plan (1-728) based on first Sunday of January
+  /// Get day of plan (1-728) based on fixed start date
   int _getDayOfPlan(DateTime date) {
-    // Import is needed at the top: import '../../utils/date_utils.dart' as utils;
-    // Get days since first Sunday of January
-    final daysSinceFirstSunday = utils.DateUtils.getDaysSinceFirstSunday(date);
-    
-    // If before first Sunday or day 0, use day 1
-    if (daysSinceFirstSunday < 1) {
-      return 1;
-    }
-    
-    // Cycle through 728 days (104 weeks * 7 days = 2 years)
-    return ((daysSinceFirstSunday - 1) % 728) + 1;
+    return utils.DateUtils.getPlanDay(date);
   }
 
   /// Normalize date to midnight

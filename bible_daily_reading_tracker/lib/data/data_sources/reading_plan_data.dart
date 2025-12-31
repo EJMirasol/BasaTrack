@@ -1,9 +1,13 @@
 import '../models/reading_task.dart';
+import '../../utils/date_utils.dart';
 
 /// Provides a 104-week Bible reading plan (2 years)
 /// Each week has 7 days with OT and NT readings
 class ReadingPlanData {
   ReadingPlanData._();
+
+  /// The official start date of the reading plan
+  static final DateTime planStartDate = DateUtils.planStartDate;
 
   /// Get week number from day number (1-728)
   static int getWeekNumber(int dayOfPlan) {

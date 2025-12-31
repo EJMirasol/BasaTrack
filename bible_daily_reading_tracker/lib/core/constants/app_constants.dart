@@ -34,6 +34,7 @@ class AppConstants {
   static const double spacing = 16.0;
 
   // Reading Plan
+  static const int planStartYear = 2026;
   static const int planStartMonth = 1; // January
   static const int planStartDay = 4; // January 4
 }

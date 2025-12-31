@@ -1,8 +1,42 @@
 import 'package:intl/intl.dart';
+import '../core/constants/app_constants.dart';
 
 /// Date utility functions
 class DateUtils {
   DateUtils._();
+
+  /// The official start date of the reading plan
+  static final DateTime planStartDate = DateTime(
+    AppConstants.planStartYear,
+    AppConstants.planStartMonth,
+    AppConstants.planStartDay,
+  );
+
+  /// Calculate days since the official plan start date
+  static int getPlanDay(DateTime date) {
+    final normalizedDate = normalizeDate(date);
+    final normalizedStart = normalizeDate(planStartDate);
+    
+    final daysSince = daysBetween(normalizedStart, normalizedDate);
+    
+    // If before start date, return 1
+    if (daysSince < 0) return 1;
+    
+    // Cycle every 104 weeks (728 days)
+    return (daysSince % 728) + 1;
+  }
+
+  /// Get the plan week number (1-104)
+  static int getPlanWeek(DateTime date) {
+    final dayOfPlan = getPlanDay(date);
+    return ((dayOfPlan - 1) ~/ 7) + 1;
+  }
+
+  /// Get day of week within the plan (1-7, where 1 = Lord's Day)
+  static int getPlanDayOfWeek(DateTime date) {
+    final dayOfPlan = getPlanDay(date);
+    return ((dayOfPlan - 1) % 7) + 1;
+  }
 
   /// Format date as "Monday, January 1"
   static String formatFullDate(DateTime date) {

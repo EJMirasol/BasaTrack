@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    'Progress will not be saved',
+                                    'Progress will be PERMANENTLY LOST if you uninstall the app or clear its data.',
                                     style: TextStyle(
                                       color: Colors.orange.shade700,
                                       fontSize: 12,
@@ -657,26 +657,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return result ?? false;
   }
 
-  /// Calculate which day of the 728-day plan we're on
-  int _getDayOfPlan() {
-    final now = DateTime.now();
-    // Plan starts on January 4
-    final startDate = DateTime(now.year, 1, 4);
-    final daysSinceStart = now.difference(startDate).inDays + 1;
-    
-    // If before start date, use day 1
-    if (daysSinceStart < 1) {
-      return 1;
-    }
-    
-    return ((daysSinceStart - 1) % 728) + 1; // Cycle through 728 days
-  }
-
   /// Get current week number (1-104)
   int _getWeekNumber() {
-    final dayOfPlan = _getDayOfPlan();
-    final weekNumber = ((dayOfPlan - 1) ~/ 7) + 1;
-    // Ensure week number is always between 1 and 104
-    return weekNumber.clamp(1, 104);
+    final readingProvider = context.read<ReadingProvider>();
+    final scheduleDate = readingProvider.currentSchedule?.date ?? DateTime.now();
+    return app_date_utils.DateUtils.getPlanWeek(scheduleDate);
   }
 }

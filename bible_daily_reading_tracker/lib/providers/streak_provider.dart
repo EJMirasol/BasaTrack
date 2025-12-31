@@ -58,13 +58,9 @@ class StreakProvider with ChangeNotifier {
       
       bool alreadyShownThisWeek = false;
       if (lastShownDate != null) {
-        // Calculate week indices to see if they are the same week
-        final todayDays = app_date_utils.DateUtils.getDaysSinceFirstSunday(today);
-        final shownDays = app_date_utils.DateUtils.getDaysSinceFirstSunday(lastShownDate);
-        
-        // Week index (0-based)
-        final todayWeek = (todayDays - 1) ~/ 7;
-        final shownWeek = (shownDays - 1) ~/ 7;
+        // Calculate week indices from plan start (continuous across years)
+        final todayWeek = app_date_utils.DateUtils.getPlanWeek(today);
+        final shownWeek = app_date_utils.DateUtils.getPlanWeek(lastShownDate);
         
         alreadyShownThisWeek = (todayWeek == shownWeek);
       }
