@@ -349,7 +349,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      'Week ${_getWeekNumber()}',
+                                      DateTime.now().isBefore(app_date_utils.DateUtils.planStartDate)
+                                          ? 'Not Started'
+                                          : 'Week ${_getWeekNumber()}',
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
@@ -395,6 +397,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
 
+                  // Plan Not Started Message
+                  if (DateTime.now().isBefore(app_date_utils.DateUtils.planStartDate))
+                    SliverToBoxAdapter(
+                      child: _buildPlanNotStartedCard(theme),
+                    ),
+
                   // Completion Card (when all tasks completed AND no backlog AND no week streak celebration)
                   if (!streakProvider.showWeekStreakCelebration && schedule?.allCompleted == true && !readingProvider.hasIncompleteMissedDays())
                     const SliverToBoxAdapter(
@@ -404,7 +412,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SliverToBoxAdapter(child: SizedBox(height: 8)),
 
                   // Missed Schedules (Backlog) - Show first
-                  ...readingProvider.getMissedSchedules().map((missedSchedule) {
+                  if (!DateTime.now().isBefore(app_date_utils.DateUtils.planStartDate))
+                    ...readingProvider.getMissedSchedules().map((missedSchedule) {
                     return SliverToBoxAdapter(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -486,7 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }).toList(),
 
                   // Today's Schedule Header (only show if not all backlog complete)
-                  if (schedule != null)
+                  if (schedule != null && !DateTime.now().isBefore(app_date_utils.DateUtils.planStartDate))
                     SliverToBoxAdapter(
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -525,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
 
                   // Today's Reading Tasks List
-                  if (schedule != null)
+                  if (schedule != null && !DateTime.now().isBefore(app_date_utils.DateUtils.planStartDate))
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
@@ -662,5 +671,77 @@ class _HomeScreenState extends State<HomeScreen> {
     final readingProvider = context.read<ReadingProvider>();
     final scheduleDate = readingProvider.currentSchedule?.date ?? DateTime.now();
     return app_date_utils.DateUtils.getPlanWeek(scheduleDate);
+  }
+
+  /// Builds a card to inform the user that the reading plan hasn't started yet
+  Widget _buildPlanNotStartedCard(ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.event_available,
+            color: Colors.white,
+            size: 64,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Reading Plan Starts Soon!',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'The official Bible reading plan begins on January 4, 2026. Your first tasks will appear here on that day.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.white.withOpacity(0.9),
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.info_outline, color: Colors.white, size: 18),
+                const SizedBox(width: 8),
+                Text(
+                  'Mark your calendar!',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
