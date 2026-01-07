@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 /// App-wide theme configuration with beautiful, uplifting design
@@ -11,6 +10,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      fontFamily: 'Inter',
       primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.backgroundLight,
       colorScheme: const ColorScheme.light(
@@ -26,52 +26,62 @@ class AppTheme {
       
       // Typography - Using Google Fonts for premium look
       textTheme: TextTheme(
-        displayLarge: GoogleFonts.merriweather(
+        displayLarge: const TextStyle(
+          fontFamily: 'Merriweather',
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
-        displayMedium: GoogleFonts.merriweather(
+        displayMedium: const TextStyle(
+          fontFamily: 'Merriweather',
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
-        displaySmall: GoogleFonts.merriweather(
+        displaySmall: const TextStyle(
+          fontFamily: 'Merriweather',
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
-        headlineMedium: GoogleFonts.inter(
+        headlineMedium: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
-        headlineSmall: GoogleFonts.inter(
+        headlineSmall: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
-        titleLarge: GoogleFonts.inter(
+        titleLarge: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
-        titleMedium: GoogleFonts.inter(
+        titleMedium: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.textPrimary,
         ),
-        bodyLarge: GoogleFonts.inter(
+        bodyLarge: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: AppColors.textPrimary,
         ),
-        bodyMedium: GoogleFonts.inter(
+        bodyMedium: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.normal,
           color: AppColors.textSecondary,
         ),
-        labelLarge: GoogleFonts.inter(
+        labelLarge: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
@@ -94,7 +104,8 @@ class AppTheme {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         foregroundColor: AppColors.textPrimary,
-        titleTextStyle: GoogleFonts.merriweather(
+        titleTextStyle: const TextStyle(
+          fontFamily: 'Merriweather',
           fontSize: 20,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
@@ -134,6 +145,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      fontFamily: 'Inter',
       primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.backgroundDark,
       colorScheme: const ColorScheme.dark(
@@ -148,52 +160,62 @@ class AppTheme {
       ),
 
       textTheme: TextTheme(
-        displayLarge: GoogleFonts.merriweather(
+        displayLarge: const TextStyle(
+          fontFamily: 'Merriweather',
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: AppColors.textLight,
         ),
-        displayMedium: GoogleFonts.merriweather(
+        displayMedium: const TextStyle(
+          fontFamily: 'Merriweather',
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: AppColors.textLight,
         ),
-        displaySmall: GoogleFonts.merriweather(
+        displaySmall: const TextStyle(
+          fontFamily: 'Merriweather',
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: AppColors.textLight,
         ),
-        headlineMedium: GoogleFonts.inter(
+        headlineMedium: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: AppColors.textLight,
         ),
-        headlineSmall: GoogleFonts.inter(
+        headlineSmall: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.textLight,
         ),
-        titleLarge: GoogleFonts.inter(
+        titleLarge: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: AppColors.textLight,
         ),
-        titleMedium: GoogleFonts.inter(
+        titleMedium: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.textLight,
         ),
-        bodyLarge: GoogleFonts.inter(
+        bodyLarge: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: AppColors.textLight,
         ),
-        bodyMedium: GoogleFonts.inter(
+        bodyMedium: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.normal,
           color: AppColors.textSecondary,
         ),
-        labelLarge: GoogleFonts.inter(
+        labelLarge: const TextStyle(
+          fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: AppColors.textLight,
@@ -214,7 +236,8 @@ class AppTheme {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         foregroundColor: AppColors.textLight,
-        titleTextStyle: GoogleFonts.merriweather(
+        titleTextStyle: const TextStyle(
+          fontFamily: 'Merriweather',
           fontSize: 20,
           fontWeight: FontWeight.bold,
           color: AppColors.textLight,

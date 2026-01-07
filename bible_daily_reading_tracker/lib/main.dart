@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_constants.dart';
 import 'data/repositories/storage_service.dart';
@@ -15,6 +16,9 @@ import 'ui/screens/login_screen.dart';
 void main() async {
   // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Configure Google Fonts to not fetch at runtime (use bundled fonts)
+  GoogleFonts.config.allowRuntimeFetching = false;
 
   // Initialize Firebase
   await Firebase.initializeApp();

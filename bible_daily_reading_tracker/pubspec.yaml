@@ -48,3 +48,17 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/google_fonts/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/google_fonts/Inter-Regular.ttf
+        - asset: assets/google_fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/google_fonts/Inter-SemiBold.ttf
+          weight: 600
+    - family: Merriweather
+      fonts:
+        - asset: assets/google_fonts/Merriweather-Bold.ttf
+          weight: 700
