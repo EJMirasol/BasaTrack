@@ -43,7 +43,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /android/local.properties
-
+/android/.gradle/file-system.probe
+/ios/Flutter/flutter_export_environment.sh
+/ios/Flutter/Generated.xcconfig
 
 # Hive database files
 *.hive
