@@ -1,4 +1,4 @@
-# Bible Daily Reading Tracker
+# BasaTrack
 
 A beautiful and motivating Flutter mobile app to help users maintain consistent daily Bible reading habits.
 
