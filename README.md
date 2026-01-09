@@ -83,8 +83,8 @@ lib/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/bible_daily_reading_tracker.git
-   cd bible_daily_reading_tracker
+   git clone https://github.com/yourusername/BasaTrack.git
+   cd BasaTrack
    ```
 
 2. **Install dependencies**
