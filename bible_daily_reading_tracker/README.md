@@ -5,39 +5,51 @@ A beautiful and motivating Flutter mobile app to help users maintain consistent 
 ## Features
 
 ✨ **Daily Reading Schedule**
-- Automatically generated daily Bible reading plan
-- 2-3 readings per day (Old Testament, New Testament, Psalms/Proverbs)
-- Simple checkbox interface to track completion
+- **2-Year Bible Reading Plan**: Comprehensive 104-week plan covering the entire Bible.
+- **Balanced Readings**: 2 readings per day (1 Old Testament, 1 New Testament).
+- Simple checkbox interface to track completion.
+
+☁️ **Cloud Sync & Backup** (Optional)
+- **Cross-Device Sync**: Sign in to sync your progress across multiple devices.
+- **Secure Backup**: Your reading history and streaks are safely backed up to the cloud.
+- **Guest Mode**: Use the app completely offline without signing in.
 
 🔥 **Streak Tracking**
-- Track consecutive days of reading
-- Special celebration for 7-day streak achievements
-- Visual streak badges with dynamic colors and animations
+- Track consecutive days of reading.
+- Special celebration for 7-day streak achievements.
+- Visual streak badges with dynamic colors and animations.
 
 📊 **Progress Monitoring**
-- Daily progress bar showing completion percentage
-- Missed days tracking with gentle, motivational reminders
-- Total days read statistics
+- Daily progress bar showing completion percentage.
+- Missed days tracking with gentle, motivational reminders.
+- Total days read statistics.
 
 🎨 **Beautiful UI/UX**
-- Clean, uplifting design with peaceful color palette
-- Smooth animations and micro-interactions
-- Material Design 3 with custom theming
-- Light and dark mode support
-- Google Fonts integration (Inter + Merriweather)
+- Clean, uplifting design with peaceful color palette.
+- Smooth animations and micro-interactions.
+- Material Design 3 with custom theming.
+- Light and dark mode support.
+- Google Fonts integration (Inter + Merriweather).
 
-💾 **Local Data Persistence**
-- All data stored locally using Hive database
-- No internet connection required
-- Privacy-focused - your data stays on your device
+💾 **Offline-First Architecture**
+- Works seamlessly without internet connection (Local-first with Hive).
+- Data automatically syncs when online if signed in.
 
 ## Technical Stack
 
 - **Framework**: Flutter 3.0+
-- **State Management**: Provider (recommended by Flutter team)
-- **Local Storage**: Hive (fast NoSQL database)
-- **Architecture**: Clean Architecture with separation of concerns
+- **Language**: Dart
+- **State Management**: Provider
+- **Local Database**: Hive (NoSQL, fast & offline-ready)
+- **Cloud Backend**: Firebase
+    - **Authentication**: Firebase Auth (Google Sign-In, etc.)
+    - **Database**: Cloud Firestore
+- **Architecture**: Clean Architecture with Repository Pattern
 - **UI**: Material Design 3 with custom theming
+- **Other Key Packages**:
+    - `connectivity_plus`: Network connectivity monitoring
+    - `google_fonts`: Custom typography
+    - `lottie`: High-quality animations
 
 ## Project Structure
 
@@ -47,9 +59,10 @@ lib/
 │   ├── theme/           # App theme and colors
 │   └── constants/       # App-wide constants
 ├── data/
-│   ├── models/          # Data models (ReadingTask, DailySchedule, UserProgress)
-│   ├── repositories/    # Business logic and data access
-│   └── data_sources/    # Bible reading plan data
+│   ├── models/          # Data models (ReadingTask, DailySchedule, UserProgress, AppUser)
+│   ├── repositories/    # Data access (Sync, Storage, Auth)
+│   ├── data_sources/    # Bible reading plan data
+│   └── services/        # External services (Firestore, Auth)
 ├── providers/           # State management (Provider)
 ├── ui/
 │   ├── screens/         # App screens
@@ -70,7 +83,7 @@ lib/
 
 1. **Clone the repository**
    ```bash
-   cd C:\Users\USER\Documents\GitHub\BasaTrack
+   git clone https://github.com/yourusername/bible_daily_reading_tracker.git
    cd bible_daily_reading_tracker
    ```
 
@@ -103,44 +116,43 @@ flutter build ios --release
 
 ## How to Use
 
-1. **Daily Reading**: Open the app to see today's reading tasks
-2. **Mark Complete**: Tap the checkbox or card to mark a reading as complete
-3. **Track Streaks**: Complete all readings daily to build your streak
+1. **Daily Reading**: Open the app to see today's reading tasks.
+2. **Mark Complete**: Tap the checkbox or card to mark a reading as complete.
+3. **Track Streaks**: Complete all readings daily to build your streak.
 4. **Celebrate Achievements**: Reach 7 consecutive days for a special celebration!
-5. **Stay Motivated**: The app will gently remind you if you've missed days
+5. **Sync (Optional)**: Sign in via the settings/profile page to back up your data.
 
 ## Features in Detail
 
 ### Reading Plan
-The app includes a comprehensive year-long Bible reading plan that covers:
-- Old Testament books
-- New Testament books
-- Psalms and Proverbs
+The app includes a comprehensive **2-year (104-week) Bible reading plan** that covers:
+- **Old Testament**: 1 reading per day.
+- **New Testament**: 1 reading per day.
 
-The plan cycles through the entire Bible with balanced daily readings.
+This balanced approach ensures you read through the entire Bible at a steady, manageable pace.
 
 ### Streak System
-- **1-6 days**: Blue flame icon, building your habit
+- **1-6 days**: Blue flame icon, building your habit.
 - **7-29 days**: Gold star icon, you've made it a weekly habit!
-- **30-99 days**: Orange trophy icon, impressive consistency
+- **30-99 days**: Orange trophy icon, impressive consistency.
 - **100+ days**: Legendary crown icon, you're a champion!
 
 ### Progress Tracking
-- Real-time progress bar for daily completion
-- Historical tracking of all completed days
-- Intelligent missed days calculation
-- Motivational messages based on your progress
+- Real-time progress bar for daily completion.
+- Historical tracking of all completed days.
+- Intelligent missed days calculation.
+- Motivational messages based on your progress.
 
 ## Code Quality
 
 This project follows Flutter best practices:
-- ✅ Clean Architecture principles
-- ✅ SOLID principles
-- ✅ Provider for state management
-- ✅ Repository pattern for data access
-- ✅ Separation of concerns
+- ✅ **Clean Architecture principles**
+- ✅ **SOLID principles**
+- ✅ **Repository Pattern** for data abstraction
+- ✅ **Offline-First** capability
+- ✅ **Separation of concerns**
+- ✅ **Type-safe code**
 - ✅ Proper error handling
-- ✅ Type-safe code
 - ✅ Comprehensive documentation
 
 ## Customization
