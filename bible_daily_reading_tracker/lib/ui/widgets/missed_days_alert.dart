@@ -8,8 +8,7 @@ class MissedDaysAlert extends StatelessWidget {
   final VoidCallback? onDismiss;
 
   const MissedDaysAlert({
-    super.key,
-    required this.missedDays,
+    required this.missedDays, super.key,
     this.onDismiss,
   });
 

@@ -9,8 +9,7 @@ class AnimatedCheck extends StatefulWidget {
   final double size;
 
   const AnimatedCheck({
-    super.key,
-    required this.isChecked,
+    required this.isChecked, super.key,
     this.onChanged,
     this.size = 28,
   });

@@ -10,12 +10,12 @@ class WeekStreakCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFFD4E157), // Lime yellow
-            const Color(0xFFCDDC39), // Yellow-green
+            Color(0xFFD4E157), // Lime yellow
+            Color(0xFFCDDC39), // Yellow-green
           ],
         ),
         borderRadius: BorderRadius.circular(16),

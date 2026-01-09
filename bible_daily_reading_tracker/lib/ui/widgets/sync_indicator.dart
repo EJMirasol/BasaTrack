@@ -7,8 +7,7 @@ class SyncIndicator extends StatelessWidget {
   final SyncProvider syncProvider;
 
   const SyncIndicator({
-    super.key,
-    required this.syncProvider,
+    required this.syncProvider, super.key,
   });
 
   @override

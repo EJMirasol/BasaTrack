@@ -7,9 +7,7 @@ class WeekCalendar extends StatelessWidget {
   final int currentDayIndex; // 0-6 (0=LD, 6=Sat)
 
   const WeekCalendar({
-    super.key,
-    required this.weekCompletionStatus,
-    required this.currentDayIndex,
+    required this.weekCompletionStatus, required this.currentDayIndex, super.key,
   });
 
   @override

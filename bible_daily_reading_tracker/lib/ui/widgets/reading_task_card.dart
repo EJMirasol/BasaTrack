@@ -11,8 +11,7 @@ class ReadingTaskCard extends StatelessWidget {
   final ValueChanged<bool>? onToggle;
 
   const ReadingTaskCard({
-    super.key,
-    required this.task,
+    required this.task, super.key,
     this.onToggle,
   });
 
@@ -91,7 +90,7 @@ class ReadingTaskCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.check_circle,
                               size: 14,
                               color: AppColors.success,

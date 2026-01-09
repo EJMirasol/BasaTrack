@@ -150,7 +150,7 @@ class ReadingRepository {
 
   /// Get user progress
   UserProgress getUserProgress() {
-    var progress = _storageService.getProgress();
+    final progress = _storageService.getProgress();
     
     // Check if streak should be broken due to missed days
     if (progress.isStreakBroken) {

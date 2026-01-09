@@ -5,8 +5,7 @@ class ReminderCard extends StatelessWidget {
   final int daysLate;
 
   const ReminderCard({
-    super.key,
-    required this.daysLate,
+    required this.daysLate, super.key,
   });
 
   @override

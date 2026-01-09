@@ -8,9 +8,7 @@ class StreakBadge extends StatefulWidget {
   final bool isWeekStreak;
 
   const StreakBadge({
-    super.key,
-    required this.currentStreak,
-    required this.longestStreak,
+    required this.currentStreak, required this.longestStreak, super.key,
     this.isWeekStreak = false,
   });
 
@@ -89,7 +87,7 @@ class _StreakBadgeState extends State<StreakBadge>
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               gradient: widget.isWeekStreak
-                  ? LinearGradient(
+                  ? const LinearGradient(
                       colors: [
                         AppColors.secondary,
                         AppColors.secondaryLight,

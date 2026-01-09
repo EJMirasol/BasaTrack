@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: AppColors.primary.withOpacity(0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.menu_book_rounded,
                               size: 64,
                               color: AppColors.primary,
@@ -175,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 vertical: 12,
                               ),
                             ),
-                            child: Row(
+                            child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
@@ -183,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   size: 20,
                                   color: AppColors.textSecondary,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Text(
                                   'Continue in Offline Mode',
                                   style: TextStyle(
@@ -208,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.error_outline,
                                     color: AppColors.error,
                                     size: 20,

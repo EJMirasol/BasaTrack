@@ -130,8 +130,4 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }

@@ -25,62 +25,62 @@ class AppTheme {
       ),
       
       // Typography - Using Google Fonts for premium look
-      textTheme: TextTheme(
-        displayLarge: const TextStyle(
+      textTheme: const TextTheme(
+        displayLarge: TextStyle(
           fontFamily: 'Merriweather',
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
-        displayMedium: const TextStyle(
+        displayMedium: TextStyle(
           fontFamily: 'Merriweather',
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
-        displaySmall: const TextStyle(
+        displaySmall: TextStyle(
           fontFamily: 'Merriweather',
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
-        headlineMedium: const TextStyle(
+        headlineMedium: TextStyle(
           fontFamily: 'Inter',
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
-        headlineSmall: const TextStyle(
+        headlineSmall: TextStyle(
           fontFamily: 'Inter',
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
-        titleLarge: const TextStyle(
+        titleLarge: TextStyle(
           fontFamily: 'Inter',
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
-        titleMedium: const TextStyle(
+        titleMedium: TextStyle(
           fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.textPrimary,
         ),
-        bodyLarge: const TextStyle(
+        bodyLarge: TextStyle(
           fontFamily: 'Inter',
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: AppColors.textPrimary,
         ),
-        bodyMedium: const TextStyle(
+        bodyMedium: TextStyle(
           fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.normal,
           color: AppColors.textSecondary,
         ),
-        labelLarge: const TextStyle(
+        labelLarge: TextStyle(
           fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w600,
@@ -99,12 +99,12 @@ class AppTheme {
       ),
 
       // AppBar Theme
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.transparent,
         foregroundColor: AppColors.textPrimary,
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontFamily: 'Merriweather',
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -121,8 +121,8 @@ class AppTheme {
 
       // Checkbox Theme
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.success;
           }
           return AppColors.textSecondary.withOpacity(0.3);
@@ -159,62 +159,62 @@ class AppTheme {
         onError: AppColors.textLight,
       ),
 
-      textTheme: TextTheme(
-        displayLarge: const TextStyle(
+      textTheme: const TextTheme(
+        displayLarge: TextStyle(
           fontFamily: 'Merriweather',
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: AppColors.textLight,
         ),
-        displayMedium: const TextStyle(
+        displayMedium: TextStyle(
           fontFamily: 'Merriweather',
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: AppColors.textLight,
         ),
-        displaySmall: const TextStyle(
+        displaySmall: TextStyle(
           fontFamily: 'Merriweather',
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: AppColors.textLight,
         ),
-        headlineMedium: const TextStyle(
+        headlineMedium: TextStyle(
           fontFamily: 'Inter',
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: AppColors.textLight,
         ),
-        headlineSmall: const TextStyle(
+        headlineSmall: TextStyle(
           fontFamily: 'Inter',
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.textLight,
         ),
-        titleLarge: const TextStyle(
+        titleLarge: TextStyle(
           fontFamily: 'Inter',
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: AppColors.textLight,
         ),
-        titleMedium: const TextStyle(
+        titleMedium: TextStyle(
           fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.textLight,
         ),
-        bodyLarge: const TextStyle(
+        bodyLarge: TextStyle(
           fontFamily: 'Inter',
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: AppColors.textLight,
         ),
-        bodyMedium: const TextStyle(
+        bodyMedium: TextStyle(
           fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.normal,
           color: AppColors.textSecondary,
         ),
-        labelLarge: const TextStyle(
+        labelLarge: TextStyle(
           fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w600,
@@ -231,12 +231,12 @@ class AppTheme {
         color: AppColors.cardDark,
       ),
 
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.transparent,
         foregroundColor: AppColors.textLight,
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontFamily: 'Merriweather',
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -251,8 +251,8 @@ class AppTheme {
       ),
 
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.success;
           }
           return AppColors.textSecondary.withOpacity(0.3);

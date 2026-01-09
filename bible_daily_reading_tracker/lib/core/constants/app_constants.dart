@@ -20,7 +20,7 @@ class AppConstants {
   static const String successMessage = 
       "Well done! You've made it for today. Please come again tomorrow.";
   static const String weekStreakMessage = 
-      "🎉 Amazing! You have read straight for a week!";
+      '🎉 Amazing! You have read straight for a week!';
   
   // Animation Durations
   static const Duration shortAnimation = Duration(milliseconds: 200);

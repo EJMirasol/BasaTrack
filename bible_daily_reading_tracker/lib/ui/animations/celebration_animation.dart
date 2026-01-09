@@ -8,8 +8,7 @@ class CelebrationAnimation extends StatefulWidget {
   final bool show;
 
   const CelebrationAnimation({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.show = false,
   });
 

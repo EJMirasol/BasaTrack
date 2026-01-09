@@ -89,10 +89,10 @@ class ReadingPlanData {
 
   /// Generate OT reference
   static String _getOTReference(int chapter) {
-    final verseStart = 1;
+    const verseStart = 1;
     final verseEnd = 10 + (chapter % 20);
 
-    if (chapter <= 50) return 'Gen ${chapter}:$verseStart-$verseEnd';
+    if (chapter <= 50) return 'Gen $chapter:$verseStart-$verseEnd';
     if (chapter <= 90) return 'Ex ${chapter - 50}:$verseStart-$verseEnd';
     if (chapter <= 117) return 'Lev ${chapter - 90}:$verseStart-$verseEnd';
     if (chapter <= 153) return 'Num ${chapter - 117}:$verseStart-$verseEnd';
@@ -103,10 +103,10 @@ class ReadingPlanData {
 
   /// Generate NT reference
   static String _getNTReference(int chapter) {
-    final verseStart = 1;
+    const verseStart = 1;
     final verseEnd = 8 + (chapter % 15);
 
-    if (chapter <= 28) return 'Matt ${chapter}:$verseStart-$verseEnd';
+    if (chapter <= 28) return 'Matt $chapter:$verseStart-$verseEnd';
     if (chapter <= 44) return 'Mark ${chapter - 28}:$verseStart-$verseEnd';
     if (chapter <= 68) return 'Luke ${chapter - 44}:$verseStart-$verseEnd';
     // ... continue with other books

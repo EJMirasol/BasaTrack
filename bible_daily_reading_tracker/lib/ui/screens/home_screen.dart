@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.error_outline,
                       size: 64,
                       color: AppColors.error,
@@ -342,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.bookmark,
                                       size: 14,
                                       color: AppColors.success,
@@ -352,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       DateTime.now().isBefore(app_date_utils.DateUtils.planStartDate)
                                           ? 'Not Started'
                                           : 'Week ${_getWeekNumber()}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.success,
@@ -486,13 +486,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 await syncProvider.syncScheduleForDate(missedSchedule.date);
                               },
                             );
-                          }).toList(),
+                          }),
                           
                           const SizedBox(height: 8),
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
 
                   // Today's Schedule Header (only show if not all backlog complete)
                   if (schedule != null && !DateTime.now().isBefore(app_date_utils.DateUtils.planStartDate))
