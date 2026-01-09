@@ -1,4 +1,4 @@
-name: bible_daily_reading_tracker
+name: basa_track
 description: A beautiful Flutter app for tracking daily Bible reading with streaks and motivation.
 publish_to: 'none'
 version: 1.0.0+1
