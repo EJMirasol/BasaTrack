@@ -4,7 +4,7 @@ A beautiful and motivating Flutter mobile app to help users maintain consistent 
 
 ## Features
 
-✨ **Daily Reading Schedule**
+✨ **Daily Reading Schedule**l
 - **2-Year Bible Reading Plan**: Comprehensive 104-week plan covering the entire Bible.
 - **Balanced Readings**: 2 readings per day (1 Old Testament, 1 New Testament).
 - Simple checkbox interface to track completion.

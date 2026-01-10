@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart' as gsi;
 import '../models/app_user.dart';
 
 /// Service for handling user authentication
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final gsi.GoogleSignIn _googleSignIn = gsi.GoogleSignIn();
 
   /// Get current user stream
   Stream<AppUser?> get authStateChanges {
@@ -28,7 +28,7 @@ class AuthService {
   Future<AppUser?> signInWithGoogle() async {
     try {
       // Trigger the Google Sign-In flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final gsi.GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       
       if (googleUser == null) {
         // User canceled the sign-in
@@ -36,7 +36,7 @@ class AuthService {
       }
 
       // Obtain auth details from the request
-      final GoogleSignInAuthentication googleAuth = 
+      final gsi.GoogleSignInAuthentication googleAuth = 
           await googleUser.authentication;
 
       // Create a new credential

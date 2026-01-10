@@ -6,7 +6,7 @@ class ConnectivityService {
   final Connectivity _connectivity = Connectivity();
   
   StreamController<bool>? _connectivityController;
-  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   
   bool _isOnline = true;
 
@@ -30,7 +30,7 @@ class ConnectivityService {
   }
 
   /// Handle connectivity changes
-  void _onConnectivityChanged(ConnectivityResult result) async {
+  void _onConnectivityChanged(List<ConnectivityResult> result) async {
     await _updateConnectivityStatus();
   }
 
@@ -40,7 +40,7 @@ class ConnectivityService {
     final wasOnline = _isOnline;
     
     // Check if we have any connection
-    _isOnline = result != ConnectivityResult.none;
+    _isOnline = !result.contains(ConnectivityResult.none);
 
     // Notify listeners if status changed
     if (wasOnline != _isOnline) {
