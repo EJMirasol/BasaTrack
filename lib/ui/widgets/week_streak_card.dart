@@ -71,9 +71,9 @@ class WeekStreakCard extends StatelessWidget {
           
           const SizedBox(height: 4),
           
-          // Tagalog Message
+          // Cebuano Message
           const Text(
-            'Katatagasaon! Nakabasa ka diresto sulod sa usa ka semana!',
+            'Pagkamaayo! Nakabasa ka diresto sulod sa usa ka semana!',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,

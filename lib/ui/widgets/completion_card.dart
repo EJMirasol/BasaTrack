@@ -72,7 +72,7 @@ class CompletionCard extends StatelessWidget {
           
           const SizedBox(height: 4),
           
-          // Tagalog Message
+          // Cebuano Message
           const Text(
             'Nakahuman ka karong adlawa. Padayon napod ugma.',
             textAlign: TextAlign.center,

@@ -75,7 +75,7 @@ class ReminderCard extends StatelessWidget {
           
           const SizedBox(height: 4),
           
-          // Tagalog Message
+          // Cebuano Message
           Text(
             'Naulahi naka ug ($daysLate) ka adlaw. Pag-apas palihug.',
             textAlign: TextAlign.center,
