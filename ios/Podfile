@@ -35,6 +35,10 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     
+    target.build_configurations.each do |config|
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386'
+    end
+    
     # Fix for gRPC-Core compilation errors
     if target.name == 'gRPC-Core'
       target.build_configurations.each do |config|
