@@ -12,6 +12,7 @@ import 'providers/auth_provider.dart';
 import 'providers/sync_provider.dart';
 import 'ui/screens/main_navigation.dart';
 import 'ui/screens/login_screen.dart';
+import 'data/services/notification_service.dart';
 
 void main() async {
   // Ensure Flutter binding is initialized
@@ -22,6 +23,11 @@ void main() async {
 
   // Initialize Firebase
   await Firebase.initializeApp();
+
+  // Initialize notifications
+  final notificationService = NotificationService();
+  await notificationService.init();
+  await notificationService.scheduleDailyReminder();
 
   // Initialize local storage
   final storageService = StorageService();

@@ -2,10 +2,12 @@ import 'package:flutter/foundation.dart';
 import '../data/models/daily_schedule.dart';
 import '../data/models/user_progress.dart';
 import '../data/repositories/reading_repository.dart';
+import '../data/services/notification_service.dart';
 
 /// Provider for managing reading state
 class ReadingProvider with ChangeNotifier {
   final ReadingRepository _repository;
+  final NotificationService _notificationService = NotificationService();
   
   DailySchedule? _currentSchedule;
   UserProgress? _userProgress;
@@ -36,6 +38,9 @@ class ReadingProvider with ChangeNotifier {
     try {
       _currentSchedule = _repository.getTodaySchedule();
       _userProgress = _repository.getUserProgress();
+      
+      _updateMissedReadingNotification();
+      
       notifyListeners();
     } catch (e) {
       _error = 'Failed to load schedule: $e';
@@ -58,12 +63,20 @@ class ReadingProvider with ChangeNotifier {
       _currentSchedule = _repository.getTodaySchedule();
       _userProgress = _repository.getUserProgress();
       
+      _updateMissedReadingNotification();
+      
       notifyListeners();
     } catch (e) {
       _error = 'Failed to toggle task: $e';
       debugPrint(_error);
       notifyListeners();
     }
+  }
+
+  /// Update missed reading notification based on current backlog
+  void _updateMissedReadingNotification() {
+    final missedCount = _repository.getIncompleteMissedDaysCount();
+    _notificationService.scheduleMissedReadingReminder(missedCount);
   }
 
   /// Refresh data
