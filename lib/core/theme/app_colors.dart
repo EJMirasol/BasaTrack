@@ -83,6 +83,6 @@ class AppColors {
   static const Color cardDark = Color(0xFF0F3460);
 
   // Shadow Colors
-  static final Color shadowLight = Colors.black.withOpacity(0.1);
-  static final Color shadowDark = Colors.black.withOpacity(0.3);
+  static final Color shadowLight = Colors.black.withValues(alpha: 0.1);
+  static final Color shadowDark = Colors.black.withValues(alpha: 0.3);
 }

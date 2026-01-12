@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/daily_schedule.dart';
 import '../models/reading_task.dart';
@@ -43,7 +44,7 @@ class StorageService {
 
       _isInitialized = true;
     } catch (e) {
-      print('Error initializing Hive: $e');
+      debugPrint('Error initializing Hive: $e');
       rethrow;
     }
   }

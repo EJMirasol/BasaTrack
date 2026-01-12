@@ -94,7 +94,7 @@ class _AnimatedCheckState extends State<AnimatedCheck>
                 border: Border.all(
                   color: widget.isChecked
                       ? AppColors.success
-                      : AppColors.textSecondary.withOpacity(0.3),
+                      : AppColors.textSecondary.withValues(alpha: 0.3),
                   width: 2,
                 ),
                 borderRadius: BorderRadius.circular(6),

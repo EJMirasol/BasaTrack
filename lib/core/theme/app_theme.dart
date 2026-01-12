@@ -125,7 +125,7 @@ class AppTheme {
           if (states.contains(WidgetState.selected)) {
             return AppColors.success;
           }
-          return AppColors.textSecondary.withOpacity(0.3);
+          return AppColors.textSecondary.withValues(alpha: 0.3);
         }),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
@@ -255,7 +255,7 @@ class AppTheme {
           if (states.contains(WidgetState.selected)) {
             return AppColors.success;
           }
-          return AppColors.textSecondary.withOpacity(0.3);
+          return AppColors.textSecondary.withValues(alpha: 0.3);
         }),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),

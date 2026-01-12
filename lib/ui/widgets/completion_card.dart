@@ -16,13 +16,13 @@ class CompletionCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             AppColors.success,
-            AppColors.success.withOpacity(0.85),
+            AppColors.success.withValues(alpha: 0.85),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.success.withOpacity(0.3),
+            color: AppColors.success.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -34,7 +34,7 @@ class CompletionCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: const Icon(

@@ -29,10 +29,10 @@ class SyncIndicator extends StatelessWidget {
           vertical: 2,
         ),
         decoration: BoxDecoration(
-          color: _getBackgroundColor().withOpacity(0.1),
+          color: _getBackgroundColor().withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: _getBackgroundColor().withOpacity(0.3),
+            color: _getBackgroundColor().withValues(alpha: 0.3),
             width: 0.5,
           ),
         ),

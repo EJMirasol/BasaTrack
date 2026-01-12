@@ -75,7 +75,7 @@ class _SuccessMessageState extends State<SuccessMessage>
               borderRadius: BorderRadius.circular(AppConstants.borderRadius),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.success.withOpacity(0.3),
+                  color: AppColors.success.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -88,7 +88,7 @@ class _SuccessMessageState extends State<SuccessMessage>
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -116,7 +116,7 @@ class _SuccessMessageState extends State<SuccessMessage>
                 Text(
                   AppConstants.successMessage,
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: Colors.white.withOpacity(0.95),
+                    color: Colors.white.withValues(alpha: 0.95),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -128,7 +128,7 @@ class _SuccessMessageState extends State<SuccessMessage>
                   TextButton(
                     onPressed: widget.onDismiss,
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.white.withOpacity(0.2),
+                      backgroundColor: Colors.white.withValues(alpha: 0.2),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 12,

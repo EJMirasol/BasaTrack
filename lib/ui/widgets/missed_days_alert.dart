@@ -22,10 +22,10 @@ class MissedDaysAlert extends StatelessWidget {
       margin: const EdgeInsets.all(AppConstants.spacing),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.1),
+        color: AppColors.warning.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         border: Border.all(
-          color: AppColors.warning.withOpacity(0.3),
+          color: AppColors.warning.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -35,7 +35,7 @@ class MissedDaysAlert extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppColors.warning.withOpacity(0.2),
+              color: AppColors.warning.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: const Icon(
