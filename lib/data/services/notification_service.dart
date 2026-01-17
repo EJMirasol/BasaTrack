@@ -22,7 +22,7 @@ class NotificationService {
 
     // Initialize notifications
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(
       requestAlertPermission: false,
@@ -56,6 +56,8 @@ class NotificationService {
           channelDescription: channelDescription,
           importance: Importance.max,
           priority: Priority.high,
+          icon: '@mipmap/ic_launcher',
+          largeIcon: DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
         ),
         iOS: DarwinNotificationDetails(),
       ),
@@ -82,6 +84,8 @@ class NotificationService {
           channelDescription: channelDescription,
           importance: Importance.high,
           priority: Priority.high,
+          icon: '@mipmap/ic_launcher',
+          largeIcon: DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
         ),
         iOS: DarwinNotificationDetails(),
       ),
