@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './home_screen.dart';
 import './backlog_screen.dart';
+import './settings_screen.dart';
 import '../../core/theme/app_colors.dart';
 
 /// Main navigation wrapper with bottom navigation bar
@@ -17,6 +18,7 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> _screens = const [
     HomeScreen(),
     BacklogScreen(),
+    SettingsScreen(),
   ];
 
   @override
@@ -42,7 +44,11 @@ class _MainNavigationState extends State<MainNavigation> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt),
-            label: 'Backlog',
+            label: 'Backlogs',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),

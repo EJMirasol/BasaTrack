@@ -19,10 +19,10 @@ class BacklogScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.success,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: AppColors.textPrimary,
         title: const Text(
-          'Backlog',
+          'Backlogs',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         elevation: 0,

@@ -13,11 +13,6 @@ import '../widgets/reminder_card.dart';
 import '../widgets/week_streak_card.dart';
 import '../widgets/notification_permission_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:file_picker/file_picker.dart';
-import '../../data/repositories/storage_service.dart';
 
 /// Main home screen of the app
 class HomeScreen extends StatefulWidget {
@@ -143,145 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Title and Menu Row
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              // App Menu
-                              PopupMenuButton<void>(
-                                icon: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.menu,
-                                        size: 16,
-                                        color: Colors.grey.shade700,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        'Menu',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey.shade700,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    enabled: false,
-                                    child: Text(
-                                      'Settings & Data',
-                                      style: theme.textTheme.titleSmall?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  const PopupMenuDivider(),
-                                  PopupMenuItem(
-                                    child: const Row(
-                                      children: [
-                                        Icon(Icons.upload_file, size: 20),
-                                        SizedBox(width: 12),
-                                        Text('Export Progress'),
-                                      ],
-                                    ),
-                                    onTap: () async {
-                                      final messenger = ScaffoldMessenger.of(context);
-                                      final storage = StorageService();
-                                      final data = await storage.exportData();
-                                      
-                                      try {
-                                        final tempDir = await getTemporaryDirectory();
-                                        final timestamp = DateTime.now().millisecondsSinceEpoch;
-                                        final file = File('${tempDir.path}/basatrack_backup_$timestamp.json');
-                                        await file.writeAsString(data);
-                                        
-                                        await Share.shareXFiles(
-                                          [XFile(file.path)],
-                                          subject: 'BasaTrack Data Backup',
-                                        );
-                                      } catch (e) {
-                                        messenger.showSnackBar(
-                                          SnackBar(content: Text('Failed to export: $e')),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  PopupMenuItem(
-                                    child: const Row(
-                                      children: [
-                                        Icon(Icons.download, size: 20),
-                                        SizedBox(width: 12),
-                                        Text('Import Progress'),
-                                      ],
-                                    ),
-                                    onTap: () async {
-                                      final messenger = ScaffoldMessenger.of(context);
-                                      try {
-                                        final result = await FilePicker.platform.pickFiles(
-                                          type: FileType.custom,
-                                          allowedExtensions: ['json'],
-                                        );
-                                        
-                                        if (result != null && result.files.single.path != null) {
-                                          final file = File(result.files.single.path!);
-                                          final content = await file.readAsString();
-                                          
-                                          final storage = StorageService();
-                                          await storage.importData(content);
-                                          
-                                          messenger.showSnackBar(
-                                            const SnackBar(content: Text('Progress imported successfully!')),
-                                          );
-                                          // Reload data after import
-                                          _loadData();
-                                        }
-                                      } catch (e) {
-                                        messenger.showSnackBar(
-                                          SnackBar(content: Text('Failed to import: $e')),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  const PopupMenuDivider(),
-                                  PopupMenuItem(
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.exit_to_app,
-                                          size: 20,
-                                          color: Colors.red.shade700,
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Text(
-                                          'Exit',
-                                          style: TextStyle(
-                                            color: Colors.red.shade700,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    onTap: () async {
-                                      await authProvider.signOut();
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                          // Empty header row to maintain spacing if needed, or just remove
+                          const SizedBox(height: 8),
                           
                           const SizedBox(height: 12),
                           
