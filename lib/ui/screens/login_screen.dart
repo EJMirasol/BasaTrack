@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../core/theme/app_colors.dart';
 
-/// Login screen with Google Sign-In
+/// Login screen for the app
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -106,93 +106,31 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       return Column(
                         children: [
-                          // Google Sign-In Button
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              // Inform user feature is under development
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Google Sign-In is currently under development. Please use Offline mode for now.',
-                                  ),
-                                  backgroundColor: AppColors.primary,
-                                  duration: Duration(seconds: 4),
-                                ),
-                              );
+                          // Start Button
+                          ElevatedButton(
+                            onPressed: () async {
+                              await authProvider.initializeSession();
                             },
-                            icon: Image.asset(
-                              'assets/google_logo.png',
-                              height: 24,
-                              errorBuilder: (context, error, stackTrace) {
-                                // Fallback if image not found
-                                return const Icon(Icons.login, size: 24);
-                              },
-                            ),
-                            label: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Sign in with Google'),
-                                Text(
-                                  '(Under Development)',
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    color: Colors.orange.shade800,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                            ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black87,
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
+                                horizontal: 48,
                                 vertical: 16,
                               ),
-                              minimumSize: const Size(250, 56),
+                              minimumSize: const Size(200, 56),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(28),
                               ),
-                              elevation: 2,
+                              elevation: 4,
                             ),
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          // Continue as Guest Button
-                          TextButton(
-                            onPressed: () async {
-                              // Show confirmation dialog
-                              final confirmed = await _showGuestModeConfirmation(context);
-                              if (confirmed && mounted) {
-                                await authProvider.signInAsGuest();
-                              }
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: AppColors.textSecondary,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
+                            child: const Text(
+                              'Start',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
                               ),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.person_outline,
-                                  size: 20,
-                                  color: AppColors.textSecondary,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Continue in Offline Mode',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ),
-                              ],
                             ),
                           ),
 
@@ -234,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Privacy note
                   Text(
-                    'Your data is securely synced across all your devices',
+                    'Your reading progress is stored locally on this device',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -247,106 +185,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  /// Show confirmation dialog before continuing as guest
-  Future<bool> _showGuestModeConfirmation(BuildContext context) async {
-    final theme = Theme.of(context);
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Row(
-            children: [
-              Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.orange.shade700,
-                size: 28,
-              ),
-              const SizedBox(width: 12),
-              const Text('Offline Mode'),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'You are about to continue in offline mode.',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.orange.shade200,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: Colors.orange.shade700,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Your reading progress will be saved locally on this device, but it will be PERMANENTLY LOST if you uninstall the app or clear its data. Sign in with Google (under development) will be required to sync your data across devices.',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.orange.shade900,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Do you want to continue?',
-                style: theme.textTheme.bodyMedium,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'Continue in Offline Mode',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-
-    return result ?? false;
   }
 }

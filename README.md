@@ -41,8 +41,8 @@ A beautiful and motivating Flutter mobile app to help users maintain consistent 
 - **Language**: Dart
 - **State Management**: Provider
 - **Local Database**: Hive (NoSQL, fast & offline-ready)
-- **Cloud Backend**: Firebase
-    - **Authentication**: Firebase Auth (Google Sign-In, etc.)
+- **Local Storage**: Hive
+- **State Management**: Provider
     - **Database**: Cloud Firestore
 - **Architecture**: Clean Architecture with Repository Pattern
 - **UI**: Material Design 3 with custom theming

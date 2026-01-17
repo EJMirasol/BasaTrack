@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_constants.dart';
@@ -20,9 +19,6 @@ void main() async {
 
   // Configure Google Fonts to not fetch at runtime (use bundled fonts)
   GoogleFonts.config.allowRuntimeFetching = false;
-
-  // Initialize Firebase
-  await Firebase.initializeApp();
 
   // Initialize notifications (permissions will be requested from home screen)
   final notificationService = NotificationService();
@@ -102,12 +98,6 @@ class BibleDailyReadingApp extends StatelessWidget {
 
             // If signed in, show home screen
             if (authProvider.isSignedIn) {
-              // Perform initial sync on first sign-in
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (syncProvider.lastSyncTime == null) {
-                  syncProvider.performInitialSync();
-                }
-              });
               return const MainNavigation();
             }
 

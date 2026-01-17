@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/daily_schedule.dart';
@@ -109,6 +110,53 @@ class StorageService {
     await _progressBox!.clear();
   }
 
+  /// Export all data as a JSON string
+  Future<String> exportData() async {
+    await _ensureInitialized();
+    
+    final Map<String, dynamic> data = {
+      'version': AppConstants.appVersion,
+      'exportDate': DateTime.now().toIso8601String(),
+      'schedules': {},
+      'progress': getProgress().toJson(),
+    };
+
+    final schedules = _schedulesBox!.toMap();
+    final Map<String, dynamic> schedulesJson = {};
+    schedules.forEach((key, value) {
+      schedulesJson[key.toString()] = value.toJson();
+    });
+    data['schedules'] = schedulesJson;
+
+    return jsonEncode(data);
+  }
+
+  /// Import data from a JSON string
+  Future<void> importData(String jsonData) async {
+    await _ensureInitialized();
+    
+    final Map<String, dynamic> data = jsonDecode(jsonData);
+
+    // Validate version or structure if needed
+    if (!data.containsKey('progress') || !data.containsKey('schedules')) {
+      throw Exception('Invalid fallback data format');
+    }
+
+    // Clear existing data
+    await clearAll();
+
+    // Import progress
+    final progressJson = data['progress'] as Map<String, dynamic>;
+    await saveProgress(UserProgress.fromJson(progressJson));
+
+    // Import schedules
+    final schedulesJson = data['schedules'] as Map<String, dynamic>;
+    for (final entry in schedulesJson.entries) {
+      final schedule = DailySchedule.fromJson(entry.value as Map<String, dynamic>);
+      await _schedulesBox!.put(entry.key, schedule);
+    }
+  }
+
   /// Generate a consistent key for a date
   String _getDateKey(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
@@ -133,5 +181,16 @@ class StorageService {
     await _schedulesBox?.close();
     await _progressBox?.close();
     _isInitialized = false;
+  }
+
+  /// Manually set the initialized state for testing
+  @visibleForTesting
+  void setInitializedForTesting(
+    Box<DailySchedule> schedulesBox,
+    Box<dynamic> progressBox,
+  ) {
+    _schedulesBox = schedulesBox;
+    _progressBox = progressBox;
+    _isInitialized = true;
   }
 }

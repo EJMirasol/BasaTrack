@@ -18,8 +18,6 @@
 # is used.
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
-# Firebase
--keep class com.google.firebase.** { *; }
 -keep class com.google.android.gms.** { *; }
 
 # Keep all model classes that might be serialized

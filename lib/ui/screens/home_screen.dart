@@ -13,6 +13,11 @@ import '../widgets/reminder_card.dart';
 import '../widgets/week_streak_card.dart';
 import '../widgets/notification_permission_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:file_picker/file_picker.dart';
+import '../../data/repositories/storage_service.dart';
 
 /// Main home screen of the app
 class HomeScreen extends StatefulWidget {
@@ -123,9 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             final schedule = readingProvider.currentSchedule;
-            final userName = authProvider.isGuest 
-                ? 'Guest' 
-                : (authProvider.currentUser?.displayName?.split(' ')[0] ?? 'Friend');
             
             return RefreshIndicator(
               onRefresh: _onRefresh,
@@ -133,83 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
-                  // Offline Warning Banner
-                  if (authProvider.isGuest)
-                    SliverToBoxAdapter(
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.shade50,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.orange.shade200,
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.warning_amber_rounded,
-                              color: Colors.orange.shade700,
-                              size: 24,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Offline Mode',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange.shade900,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    'Progress will be PERMANENTLY LOST if you uninstall the app or clear its data.',
-                                    style: TextStyle(
-                                      color: Colors.orange.shade700,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                authProvider.prepareForSignInFromGuest();
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: const Text(
-                                'Sign In',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
 
                   // Header
                   SliverToBoxAdapter(
@@ -218,36 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Greeting and Menu Row
+                          // Title and Menu Row
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 16,
-                                    backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                                    backgroundImage: authProvider.currentUser?.photoURL != null
-                                        ? NetworkImage(authProvider.currentUser!.photoURL!)
-                                        : null,
-                                    child: authProvider.currentUser?.photoURL == null
-                                        ? const Icon(
-                                            Icons.person,
-                                            size: 20,
-                                            color: AppColors.primary,
-                                          )
-                                        : null,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Hi $userName!',
-                                    style: theme.textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              // Profile Menu
+                              // App Menu
                               PopupMenuButton<void>(
                                 icon: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -281,37 +181,92 @@ class _HomeScreenState extends State<HomeScreen> {
                                 itemBuilder: (context) => [
                                   PopupMenuItem(
                                     enabled: false,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    child: Text(
+                                      'Settings & Data',
+                                      style: theme.textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  const PopupMenuDivider(),
+                                  PopupMenuItem(
+                                    child: const Row(
                                       children: [
-                                        Text(
-                                          authProvider.currentUser?.displayName ?? 'User',
-                                          style: theme.textTheme.titleSmall?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        if (authProvider.currentUser?.email != null)
-                                          Text(
-                                            authProvider.currentUser!.email!,
-                                            style: theme.textTheme.bodySmall?.copyWith(
-                                              color: Colors.grey.shade600,
-                                            ),
-                                          ),
+                                        Icon(Icons.upload_file, size: 20),
+                                        SizedBox(width: 12),
+                                        Text('Export Progress'),
                                       ],
                                     ),
+                                    onTap: () async {
+                                      final messenger = ScaffoldMessenger.of(context);
+                                      final storage = StorageService();
+                                      final data = await storage.exportData();
+                                      
+                                      try {
+                                        final tempDir = await getTemporaryDirectory();
+                                        final timestamp = DateTime.now().millisecondsSinceEpoch;
+                                        final file = File('${tempDir.path}/basatrack_backup_$timestamp.json');
+                                        await file.writeAsString(data);
+                                        
+                                        await Share.shareXFiles(
+                                          [XFile(file.path)],
+                                          subject: 'BasaTrack Data Backup',
+                                        );
+                                      } catch (e) {
+                                        messenger.showSnackBar(
+                                          SnackBar(content: Text('Failed to export: $e')),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  PopupMenuItem(
+                                    child: const Row(
+                                      children: [
+                                        Icon(Icons.download, size: 20),
+                                        SizedBox(width: 12),
+                                        Text('Import Progress'),
+                                      ],
+                                    ),
+                                    onTap: () async {
+                                      final messenger = ScaffoldMessenger.of(context);
+                                      try {
+                                        final result = await FilePicker.platform.pickFiles(
+                                          type: FileType.custom,
+                                          allowedExtensions: ['json'],
+                                        );
+                                        
+                                        if (result != null && result.files.single.path != null) {
+                                          final file = File(result.files.single.path!);
+                                          final content = await file.readAsString();
+                                          
+                                          final storage = StorageService();
+                                          await storage.importData(content);
+                                          
+                                          messenger.showSnackBar(
+                                            const SnackBar(content: Text('Progress imported successfully!')),
+                                          );
+                                          // Reload data after import
+                                          _loadData();
+                                        }
+                                      } catch (e) {
+                                        messenger.showSnackBar(
+                                          SnackBar(content: Text('Failed to import: $e')),
+                                        );
+                                      }
+                                    },
                                   ),
                                   const PopupMenuDivider(),
                                   PopupMenuItem(
                                     child: Row(
                                       children: [
                                         Icon(
-                                          Icons.logout,
+                                          Icons.exit_to_app,
                                           size: 20,
                                           color: Colors.red.shade700,
                                         ),
                                         const SizedBox(width: 12),
                                         Text(
-                                          'Sign Out',
+                                          'Exit',
                                           style: TextStyle(
                                             color: Colors.red.shade700,
                                             fontWeight: FontWeight.w500,

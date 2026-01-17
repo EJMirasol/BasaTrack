@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
 /// Represents an authenticated user in the app
@@ -9,7 +8,6 @@ class AppUser {
   final String? photoURL;
   final DateTime createdAt;
   final DateTime? lastSignInAt;
-  final bool isGuest;
 
   AppUser({
     required this.uid,
@@ -18,15 +16,13 @@ class AppUser {
     this.photoURL,
     DateTime? createdAt,
     this.lastSignInAt,
-    this.isGuest = false,
   }) : createdAt = createdAt ?? DateTime.now();
 
-  /// Create a guest user
-  factory AppUser.guest() {
+  /// Create a local user
+  factory AppUser.local() {
     return AppUser(
-      uid: 'guest_${const Uuid().v4()}',
-      displayName: 'Guest',
-      isGuest: true,
+      uid: 'user_${const Uuid().v4()}',
+      displayName: 'User',
     );
   }
 
@@ -38,7 +34,6 @@ class AppUser {
     String? photoURL,
     DateTime? createdAt,
     DateTime? lastSignInAt,
-    bool? isGuest,
   }) {
     return AppUser(
       uid: uid ?? this.uid,
@@ -47,7 +42,6 @@ class AppUser {
       photoURL: photoURL ?? this.photoURL,
       createdAt: createdAt ?? this.createdAt,
       lastSignInAt: lastSignInAt ?? this.lastSignInAt,
-      isGuest: isGuest ?? this.isGuest,
     );
   }
 
@@ -60,7 +54,6 @@ class AppUser {
       'photoURL': photoURL,
       'createdAt': createdAt.toIso8601String(),
       'lastSignInAt': lastSignInAt?.toIso8601String(),
-      'isGuest': isGuest,
     };
   }
 
@@ -77,24 +70,13 @@ class AppUser {
       lastSignInAt: json['lastSignInAt'] != null
           ? DateTime.parse(json['lastSignInAt'] as String)
           : null,
-      isGuest: json['isGuest'] as bool? ?? false,
     );
   }
 
-  /// Create from Firestore document
-  factory AppUser.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return AppUser.fromJson(data);
-  }
-
-  /// Convert to Firestore document
-  Map<String, dynamic> toFirestore() {
-    return toJson();
-  }
 
   @override
   String toString() =>
-      'AppUser(uid: $uid, email: $email, displayName: $displayName, isGuest: $isGuest)';
+      'AppUser(uid: $uid, email: $email, displayName: $displayName)';
 
   @override
   bool operator ==(Object other) {
