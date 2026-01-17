@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.lrph.bible_daily_reading_tracker"
+    namespace "com.lrph.basatrack"
     compileSdk 36
     ndkVersion flutter.ndkVersion
 
@@ -43,7 +43,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.lrph.bible_daily_reading_tracker"
+        applicationId "com.lrph.basatrack"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
@@ -54,6 +54,9 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.debug
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
