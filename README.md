@@ -1,6 +1,6 @@
 # BasaTrack
 
-A beautiful and motivating Flutter mobile app to help users maintain consistent daily Bible reading habits.
+This application assists saints in the Lord's Recovery, specifically in the Southern Philippines, in tracking their daily progress through a synchronized two-year Bible reading schedule. It aims to encourage consistency and corporate pursuit.
 
 ## Features
 
@@ -24,17 +24,6 @@ A beautiful and motivating Flutter mobile app to help users maintain consistent 
 - Missed days tracking with gentle, motivational reminders.
 - Total days read statistics.
 
-🎨 **Beautiful UI/UX**
-- Clean, uplifting design with peaceful color palette.
-- Smooth animations and micro-interactions.
-- Material Design 3 with custom theming.
-- Light and dark mode support.
-- Google Fonts integration (Inter + Merriweather).
-
-💾 **Offline-First Architecture**
-- Works seamlessly without internet connection (Local-first with Hive).
-- Data automatically syncs when online if signed in.
-
 ## Technical Stack
 
 - **Framework**: Flutter 3.0+
@@ -43,13 +32,8 @@ A beautiful and motivating Flutter mobile app to help users maintain consistent 
 - **Local Database**: Hive (NoSQL, fast & offline-ready)
 - **Local Storage**: Hive
 - **State Management**: Provider
-    - **Database**: Cloud Firestore
 - **Architecture**: Clean Architecture with Repository Pattern
 - **UI**: Material Design 3 with custom theming
-- **Other Key Packages**:
-    - `connectivity_plus`: Network connectivity monitoring
-    - `google_fonts`: Custom typography
-    - `lottie`: High-quality animations
 
 ## Project Structure
 
@@ -131,17 +115,6 @@ The app includes a comprehensive **2-year (104-week) Bible reading plan** that c
 
 This balanced approach ensures you read through the entire Bible at a steady, manageable pace.
 
-### Streak System
-- **1-6 days**: Blue flame icon, building your habit.
-- **7-29 days**: Gold star icon, you've made it a weekly habit!
-- **30-99 days**: Orange trophy icon, impressive consistency.
-- **100+ days**: Legendary crown icon, you're a champion!
-
-### Progress Tracking
-- Real-time progress bar for daily completion.
-- Historical tracking of all completed days.
-- Intelligent missed days calculation.
-- Motivational messages based on your progress.
 
 ## Code Quality
 
@@ -149,7 +122,6 @@ This project follows Flutter best practices:
 - ✅ **Clean Architecture principles**
 - ✅ **SOLID principles**
 - ✅ **Repository Pattern** for data abstraction
-- ✅ **Offline-First** capability
 - ✅ **Separation of concerns**
 - ✅ **Type-safe code**
 - ✅ Proper error handling
