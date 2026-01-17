@@ -24,10 +24,9 @@ void main() async {
   // Initialize Firebase
   await Firebase.initializeApp();
 
-  // Initialize notifications
+  // Initialize notifications (permissions will be requested from home screen)
   final notificationService = NotificationService();
   await notificationService.init();
-  await notificationService.scheduleDailyReminder();
 
   // Initialize local storage
   final storageService = StorageService();

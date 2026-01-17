@@ -11,6 +11,8 @@ import '../widgets/week_calendar.dart';
 import '../widgets/completion_card.dart';
 import '../widgets/reminder_card.dart';
 import '../widgets/week_streak_card.dart';
+import '../widgets/notification_permission_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Main home screen of the app
 class HomeScreen extends StatefulWidget {
@@ -27,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Schedule data loading for after the first frame to avoid setState during build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
+      _checkAndRequestNotificationPermission();
     });
   }
 
@@ -46,6 +49,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _onRefresh() async {
     await _loadData();
+  }
+
+  /// Check if notification permission has been requested and show dialog if needed
+  Future<void> _checkAndRequestNotificationPermission() async {
+    final prefs = await SharedPreferences.getInstance();
+    const String permissionRequestedKey = 'notification_permission_requested';
+    
+    // Check if we've already asked for permission
+    final bool hasAskedBefore = prefs.getBool(permissionRequestedKey) ?? false;
+    
+    if (!hasAskedBefore && mounted) {
+      // Wait a bit for the UI to settle
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      if (mounted) {
+        // Show the permission dialog
+        await NotificationPermissionDialog.show(context);
+        
+        // Mark that we've asked for permission
+        await prefs.setBool(permissionRequestedKey, true);
+      }
+    }
   }
 
   @override

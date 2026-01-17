@@ -25,9 +25,9 @@ class NotificationService {
         AndroidInitializationSettings('@mipmap/launcher_icon');
 
     const DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
     );
 
     const InitializationSettings initializationSettings = InitializationSettings(
@@ -95,6 +95,50 @@ class NotificationService {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
     return scheduledDate;
+  }
+
+  /// Request notification permissions from the user
+  /// Returns true if permission was granted, false otherwise
+  Future<bool> requestPermissions() async {
+    // Request permissions on Android 13+ and iOS
+    bool? granted = await _notificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+    
+    // For iOS
+    final IOSFlutterLocalNotificationsPlugin? iosImplementation =
+        _notificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+    
+    if (iosImplementation != null) {
+      granted = await iosImplementation.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+    
+    // If permission granted, schedule daily reminder
+    if (granted == true) {
+      await scheduleDailyReminder();
+    }
+    
+    return granted ?? false;
+  }
+
+  /// Check if notifications are currently enabled
+  Future<bool> areNotificationsEnabled() async {
+    // Check Android permission
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    
+    if (androidImplementation != null) {
+      final bool? granted = await androidImplementation.areNotificationsEnabled();
+      return granted ?? false;
+    }
+    
+    // For iOS, we assume enabled if we reach here (iOS doesn't provide a direct check)
+    // The permission dialog will show if not previously requested
+    return true;
   }
 
   Future<void> cancelAll() async {
