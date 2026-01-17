@@ -46,13 +46,17 @@ class WeekStreakCard extends StatelessWidget {
           const SizedBox(height: 16),
           
           // Congratulations Title
-          const Text(
-            'Congratulations!',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              letterSpacing: 0.5,
+          const FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'Congratulations!',
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
           
