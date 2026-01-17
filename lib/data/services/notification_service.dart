@@ -2,6 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
+import '../../core/theme/app_colors.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -57,7 +58,8 @@ class NotificationService {
           importance: Importance.max,
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
-          largeIcon: DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
+          color: AppColors.primary,
+          largeIcon: DrawableResourceAndroidBitmap('@mipmap/bt_launcher_foreground'),
         ),
         iOS: DarwinNotificationDetails(),
       ),
@@ -85,7 +87,8 @@ class NotificationService {
           importance: Importance.high,
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
-          largeIcon: DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
+          color: AppColors.primary,
+          largeIcon: DrawableResourceAndroidBitmap('@mipmap/bt_launcher_foreground'),
         ),
         iOS: DarwinNotificationDetails(),
       ),
