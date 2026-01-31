@@ -20,19 +20,21 @@ class StatisticsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.textPrimary,
-        title: const Text(
-          'Stats',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        elevation: 0,
-        centerTitle: true,
-      ),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
+            SliverAppBar(
+              backgroundColor: Colors.white,
+              foregroundColor: AppColors.textPrimary,
+              title: const Text(
+                'Stats',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              elevation: 0,
+              centerTitle: true,
+              floating: true,
+              pinned: false,
+            ),
             // Statistics Summary Cards
             SliverPadding(
               padding: const EdgeInsets.all(16.0),
