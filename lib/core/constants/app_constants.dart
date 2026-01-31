@@ -10,6 +10,7 @@ class AppConstants {
   static const String hiveBoxSchedules = 'schedules';
   static const String hiveBoxProgress = 'progress';
   static const String keyUserProgress = 'user_progress';
+  static const String keyUserSession = 'user_session';
 
   // Streak Milestones
   static const int weekStreakDays = 7;

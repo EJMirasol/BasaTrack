@@ -1,17 +1,22 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../data/services/auth_service.dart';
 import '../data/models/app_user.dart';
+import '../core/constants/app_constants.dart';
 
 /// Provider for managing authentication state
 class AuthProvider with ChangeNotifier {
   final AuthService _authService;
   
   AppUser? _currentUser;
-  bool _isLoading = false;
+  bool _isLoading = true; // Initializing to true while loading session
   String? _error;
 
   AuthProvider({AuthService? authService})
       : _authService = authService ?? AuthService() {
+    _loadSession();
+    
     // Listen to auth state changes (currently mock)
     _authService.authStateChanges.listen((user) {
       if (user != null) {
@@ -28,6 +33,24 @@ class AuthProvider with ChangeNotifier {
   bool get isSignedIn => _currentUser != null;
   String? get currentUserId => _currentUser?.uid;
 
+  /// Load session from SharedPreferences
+  Future<void> _loadSession() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final sessionJson = prefs.getString(AppConstants.keyUserSession);
+      
+      if (sessionJson != null) {
+        final Map<String, dynamic> userData = jsonDecode(sessionJson);
+        _currentUser = AppUser.fromJson(userData);
+      }
+    } catch (e) {
+      debugPrint('Error loading session: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   /// Initialize local session
   Future<bool> initializeSession() async {
     _setLoading(true);
@@ -36,6 +59,14 @@ class AuthProvider with ChangeNotifier {
     try {
       // Create a local session user
       _currentUser = AppUser.local();
+      
+      // Persist the session
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        AppConstants.keyUserSession,
+        jsonEncode(_currentUser!.toJson()),
+      );
+      
       notifyListeners();
       return true;
     } catch (e) {
@@ -54,9 +85,9 @@ class AuthProvider with ChangeNotifier {
     _error = null;
 
     try {
-      // For this app, sign out clears the current session
-      // If we want to clear all data on sign out, we can call clearAll()
-      // But usually guest mode should keep data.
+      // Clear persisted session
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(AppConstants.keyUserSession);
       
       _currentUser = null;
       notifyListeners();
