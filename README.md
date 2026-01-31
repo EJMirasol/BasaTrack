@@ -4,25 +4,33 @@ This application assists saints in the Lord's Recovery, specifically in the Sout
 
 ## Features
 
-✨ **Daily Reading Schedule**l
+✨ **Daily Reading Schedule**
 - **2-Year Bible Reading Plan**: Comprehensive 104-week plan covering the entire Bible.
 - **Balanced Readings**: 2 readings per day (1 Old Testament, 1 New Testament).
 - Simple checkbox interface to track completion.
 
-☁️ **Cloud Sync & Backup** (Optional)
-- **Cross-Device Sync**: Sign in to sync your progress across multiple devices.
-- **Secure Backup**: Your reading history and streaks are safely backed up to the cloud.
-- **Guest Mode**: Use the app completely offline without signing in.
+📊 **Advanced Statistics & Progress Monitoring**
+- **Detailed Stats Dashboard**: Track Backlogs, Completed Tasks, and Total Week Streaks.
+- **Personal Best**: See your longest reading streak displayed with a "Personal Best" badge.
+- **Weekly Overview**: A visual 7-day tracker showing your completion status for the current week.
+- **Bible Reading Progress**: Separate progress bars for Old Testament and New Testament completion.
+- **Total Days Read**: Milestone tracking for total reading activity.
 
-🔥 **Streak Tracking**
+📅 **Streak Tracking**
 - Track consecutive days of reading.
 - Special celebration for 7-day streak achievements.
 - Visual streak badges with dynamic colors and animations.
 
-📊 **Progress Monitoring**
-- Daily progress bar showing completion percentage.
-- Missed days tracking with gentle, motivational reminders.
-- Total days read statistics.
+🔔 **Smart Notifications**
+- **Daily Reminders**: Gentle morning/evening prompts to help you stay on track.
+- **Missed Reading Alerts**: Notifications for backlogs to encourage catching up.
+- One-time permission request flow on first launch.
+
+💾 **Data Management & Portability**
+- **Export Progress**: Save your reading history as a portable JSON file.
+- **Import Progress**: Easily restore your data on a new device or after a reset.
+- **Guest Mode & Local Storage**: Data is stored securely on your device using Hive (NoSQL).
+- **Auto-Login**: Seamless transition to the home screen for returning users.
 
 ## Technical Stack
 
@@ -30,10 +38,12 @@ This application assists saints in the Lord's Recovery, specifically in the Sout
 - **Language**: Dart
 - **State Management**: Provider
 - **Local Database**: Hive (NoSQL, fast & offline-ready)
-- **Local Storage**: Hive
-- **State Management**: Provider
+- **Dependencies**: 
+  - `path_provider` & `share_plus` (Data Export)
+  - `file_picker` (Data Import)
+  - `flutter_local_notifications` (Reminders)
 - **Architecture**: Clean Architecture with Repository Pattern
-- **UI**: Material Design 3 with custom theming
+- **UI**: Material Design 3 with custom theming and responsive layouts
 
 ## Project Structure
 
@@ -46,11 +56,11 @@ lib/
 │   ├── models/          # Data models (ReadingTask, DailySchedule, UserProgress, AppUser)
 │   ├── repositories/    # Data access (Sync, Storage, Auth)
 │   ├── data_sources/    # Bible reading plan data
-│   └── services/        # External services (Firestore, Auth)
-├── providers/           # State management (Provider)
+│   └── services/        # Services (NotificationService, StorageService)
+├── providers/           # State management (AuthProvider, ReadingProvider, StreakProvider)
 ├── ui/
-│   ├── screens/         # App screens
-│   ├── widgets/         # Reusable UI components
+│   ├── screens/         # App screens (Home, Stats, Settings, Login)
+│   ├── widgets/         # Reusable UI components (NotificationDialog, ProgressCards)
 │   └── animations/      # Custom animations
 └── utils/               # Utility functions
 ```
@@ -88,11 +98,6 @@ lib/
 flutter build apk --release
 ```
 
-**Android App Bundle:**
-```bash
-flutter build appbundle --release
-```
-
 **iOS (requires macOS):**
 ```bash
 flutter build ios --release
@@ -100,21 +105,11 @@ flutter build ios --release
 
 ## How to Use
 
-1. **Daily Reading**: Open the app to see today's reading tasks.
+1. **Daily Reading**: Open the **Home** tab to see today's reading tasks.
 2. **Mark Complete**: Tap the checkbox or card to mark a reading as complete.
-3. **Track Streaks**: Complete all readings daily to build your streak.
-4. **Celebrate Achievements**: Reach 7 consecutive days for a special celebration!
-5. **Sync (Optional)**: Sign in via the settings/profile page to back up your data.
-
-## Features in Detail
-
-### Reading Plan
-The app includes a comprehensive **2-year (104-week) Bible reading plan** that covers:
-- **Old Testament**: 1 reading per day.
-- **New Testament**: 1 reading per day.
-
-This balanced approach ensures you read through the entire Bible at a steady, manageable pace.
-
+3. **Analyze Stats**: Switch to the **Stats** tab to see your progress, backlogs, and streaks.
+4. **Manage Data**: Go to the **Settings** tab to Export or Import your progress.
+5. **Notifications**: Accept notification permissions on first launch to receive daily reminders.
 
 ## Code Quality
 
@@ -125,7 +120,6 @@ This project follows Flutter best practices:
 - ✅ **Separation of concerns**
 - ✅ **Type-safe code**
 - ✅ Proper error handling
-- ✅ Comprehensive documentation
 
 ## Customization
 
@@ -141,10 +135,6 @@ Edit `lib/core/constants/app_constants.dart` to customize motivational messages.
 ## Support
 
 For issues or questions, please create an issue in the repository.
-
-## License
-
-This project is open source and available for personal and educational use.
 
 ---
 
