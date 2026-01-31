@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './home_screen.dart';
-import './backlog_screen.dart';
+import './statistics_screen.dart';
 import './settings_screen.dart';
 import '../../core/theme/app_colors.dart';
 
@@ -17,7 +17,7 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _screens = const [
     HomeScreen(),
-    BacklogScreen(),
+    StatisticsScreen(),
     SettingsScreen(),
   ];
 
@@ -43,8 +43,9 @@ class _MainNavigationState extends State<MainNavigation> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: 'Backlogs',
+            icon: Icon(Icons.analytics_outlined),
+            activeIcon: Icon(Icons.analytics),
+            label: 'Stats',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

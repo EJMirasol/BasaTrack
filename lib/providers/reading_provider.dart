@@ -136,6 +136,31 @@ class ReadingProvider with ChangeNotifier {
     return _repository.getIncompleteMissedDaysCount();
   }
 
+  /// Get total tasks completed across all time
+  int getTotalCompletedTasksCount() {
+    return _repository.getTotalCompletedTasksCount();
+  }
+
+  /// Get total number of days with at least one completed task
+  int getTotalDaysRead() {
+    return _repository.getTotalDaysRead();
+  }
+
+  /// Get total week streaks completed
+  int getTotalWeekStreaksCount() {
+    return _repository.getTotalWeekStreaksCount();
+  }
+
+  /// Get total OT tasks completed
+  int getOTCompletedCount() {
+    return _repository.getOTCompletedCount();
+  }
+
+  /// Get total NT tasks completed
+  int getNTCompletedCount() {
+    return _repository.getNTCompletedCount();
+  }
+
   /// Reset all data (for testing)
   Future<void> resetAllData() async {
     await _repository.resetAll();

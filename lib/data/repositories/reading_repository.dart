@@ -236,6 +236,95 @@ class ReadingRepository {
     return getMissedSchedules().length;
   }
 
+  /// Get total count of completed tasks across all time
+  int getTotalCompletedTasksCount() {
+    final allSchedules = _storageService.getAllSchedules();
+    int count = 0;
+    for (final schedule in allSchedules) {
+      count += schedule.completedCount;
+    }
+    return count;
+  }
+
+  /// Get total number of days with at least one completed task
+  int getTotalDaysRead() {
+    final allSchedules = _storageService.getAllSchedules();
+    return allSchedules.where((s) => s.completedCount > 0).length;
+  }
+
+  /// Get total count of completed Old Testament tasks
+  int getOTCompletedCount() {
+    final allSchedules = _storageService.getAllSchedules();
+    int count = 0;
+    for (final schedule in allSchedules) {
+      count += schedule.tasks.where((t) => t.id.endsWith('_ot') && t.isCompleted).length;
+    }
+    return count;
+  }
+
+  /// Get total count of completed New Testament tasks
+  int getNTCompletedCount() {
+    final allSchedules = _storageService.getAllSchedules();
+    int count = 0;
+    for (final schedule in allSchedules) {
+      count += schedule.tasks.where((t) => t.id.endsWith('_nt') && t.isCompleted).length;
+    }
+    return count;
+  }
+
+  /// Get total count of completed weeks (7 days fully completed ON TIME)
+  /// A week counts as a streak only if there were no backlog completions.
+  int getTotalWeekStreaksCount() {
+    final now = DateTime.now();
+    final today = _normalizeDate(now);
+    
+    // Get the reading plan start date
+    final planStart = ReadingPlanData.planStartDate;
+    final normalizedPlanStart = _normalizeDate(planStart);
+    
+    // Calculate how many full weeks have passed since start
+    final daysSinceStart = today.difference(normalizedPlanStart).inDays;
+    final fullWeeksPassed = (daysSinceStart + 1) ~/ 7;
+    
+    int completedWeeks = 0;
+    
+    for (int w = 0; w < fullWeeksPassed; w++) {
+      final weekStartDate = normalizedPlanStart.add(Duration(days: w * 7));
+      bool weekStreak = true;
+      
+      for (int d = 0; d < 7; d++) {
+        final date = weekStartDate.add(Duration(days: d));
+        final schedule = getScheduleForDate(date);
+        
+        // 1. Must be fully completed
+        if (!schedule.allCompleted) {
+          weekStreak = false;
+          break;
+        }
+
+        // 2. Must be completed ON TIME (not from backlog)
+        // If completedAt date is after schedule date, it was a backlog completion
+        final anyTaskLate = schedule.tasks.any((task) {
+          if (task.completedAt == null) return true; 
+          final completedDateNorm = _normalizeDate(task.completedAt!);
+          final scheduleDateNorm = _normalizeDate(schedule.date);
+          return completedDateNorm.isAfter(scheduleDateNorm);
+        });
+
+        if (anyTaskLate) {
+          weekStreak = false;
+          break;
+        }
+      }
+      
+      if (weekStreak) {
+        completedWeeks++;
+      }
+    }
+    
+    return completedWeeks;
+  }
+
   /// Reset all data (for testing)
   Future<void> resetAll() async {
     await _storageService.clearAll();
