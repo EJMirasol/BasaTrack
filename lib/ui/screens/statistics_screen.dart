@@ -23,10 +23,10 @@ class StatisticsScreen extends StatelessWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverAppBar(
+            const SliverAppBar(
               backgroundColor: Colors.white,
               foregroundColor: AppColors.textPrimary,
-              title: const Text(
+              title: Text(
                 'Stats',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
