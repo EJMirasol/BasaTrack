@@ -109,10 +109,15 @@ class ReadingProvider with ChangeNotifier {
     return _repository.getCurrentWeekSchedules();
   }
 
+  /// Get week completion status for a specific week containing the date
+  List<bool> getWeekCompletionStatusForDate(DateTime date) {
+    final weekSchedules = _repository.getWeekSchedules(date);
+    return weekSchedules.map((schedule) => schedule.allCompleted).toList();
+  }
+
   /// Get week completion status for calendar (7 booleans)
   List<bool> getWeekCompletionStatus() {
-    final weekSchedules = getWeekSchedules();
-    return weekSchedules.map((schedule) => schedule.allCompleted).toList();
+    return getWeekCompletionStatusForDate(DateTime.now());
   }
 
   /// Get current day index in week (0=Sunday/LD, 6=Saturday)

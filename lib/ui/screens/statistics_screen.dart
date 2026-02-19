@@ -2,10 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/reading_provider.dart';
 import '../../core/theme/app_colors.dart';
+import 'package:intl/intl.dart';
 
 /// Screen showing reading statistics and a summary of missed readings
-class StatisticsScreen extends StatelessWidget {
+class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
+
+  @override
+  State<StatisticsScreen> createState() => _StatisticsScreenState();
+}
+
+class _StatisticsScreenState extends State<StatisticsScreen> {
+  DateTime _selectedDate = DateTime.now();
+
+  void _previousWeek() {
+    setState(() {
+      _selectedDate = _selectedDate.subtract(const Duration(days: 7));
+    });
+  }
+
+  void _nextWeek() {
+    setState(() {
+      _selectedDate = _selectedDate.add(const Duration(days: 7));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +34,8 @@ class StatisticsScreen extends StatelessWidget {
     final totalCompletedTasks = readingProvider.getTotalCompletedTasksCount();
     final totalWeekStreaks = readingProvider.getTotalWeekStreaksCount();
     final totalBacklogs = readingProvider.getIncompleteMissedDaysCount();
-    final longestStreak = readingProvider.getLongestStreak();
     final totalDaysRead = readingProvider.getTotalDaysRead();
-    final weekStatus = readingProvider.getWeekCompletionStatus();
+    final weekStatus = readingProvider.getWeekCompletionStatusForDate(_selectedDate);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
@@ -69,10 +88,10 @@ class StatisticsScreen extends StatelessWidget {
                   ),
                   _buildStatCard(
                     context,
-                    title: 'Personal Best',
-                    value: '$longestStreak Days',
-                    icon: Icons.emoji_events,
-                    color: Colors.amber.shade700,
+                    title: 'Total Days Read',
+                    value: '$totalDaysRead ${totalDaysRead == 1 ? 'Day' : 'Days'}',
+                    icon: Icons.calendar_today,
+                    color: Colors.blue.shade700,
                   ),
                 ]),
               ),
@@ -89,25 +108,10 @@ class StatisticsScreen extends StatelessWidget {
             // Progress Section (Always visible)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
                 child: _buildBibleProgressCard(context, readingProvider),
               ),
             ),
-
-            // Reading Activity Section
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
-                child: _buildStatCard(
-                  context,
-                  title: 'Total Days Read',
-                  value: '$totalDaysRead Days',
-                  icon: Icons.calendar_today,
-                  color: Colors.blue.shade700,
-                ),
-              ),
-            ),
-
           ],
         ),
       ),
@@ -139,13 +143,7 @@ class StatisticsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(icon, color: color, size: 24),
-              const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 12),
-            ],
-          ),
+          Icon(icon, color: color, size: 24),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -293,7 +291,12 @@ class StatisticsScreen extends StatelessWidget {
   Widget _buildWeeklyOverview(BuildContext context, List<bool> statuses) {
     final theme = Theme.of(context);
     final days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-    final todayIndex = DateTime.now().weekday % 7;
+    
+    // Calculate week range
+    final sunday = _selectedDate.subtract(Duration(days: _selectedDate.weekday % 7));
+    final saturday = sunday.add(const Duration(days: 6));
+    final dateRange = "${DateFormat('MMM d').format(sunday)} - ${DateFormat('MMM d').format(saturday)}";
+    final isCurrentWeek = _isSameWeek(_selectedDate, DateTime.now());
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -312,18 +315,52 @@ class StatisticsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'This Week',
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                isCurrentWeek ? 'This Week' : 'Reading Activity',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: _previousWeek,
+                    icon: const Icon(Icons.chevron_left, size: 20),
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    dateRange,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: _nextWeek,
+                    icon: const Icon(Icons.chevron_right, size: 20),
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(7, (index) {
-              final isToday = index == todayIndex;
+              final date = sunday.add(Duration(days: index));
+              final isToday = _isToday(date);
               final isCompleted = statuses[index];
 
               return Column(
@@ -360,7 +397,7 @@ class StatisticsScreen extends StatelessWidget {
                       child: isCompleted
                           ? const Icon(Icons.check, size: 16, color: AppColors.success)
                           : Text(
-                              (index + 1).toString(),
+                              date.day.toString(),
                               style: TextStyle(
                                 fontSize: 10,
                                 color: isToday ? AppColors.primary : Colors.grey,
@@ -376,5 +413,16 @@ class StatisticsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool _isToday(DateTime date) {
+    final now = DateTime.now();
+    return date.year == now.year && date.month == now.month && date.day == now.day;
+  }
+
+  bool _isSameWeek(DateTime date1, DateTime date2) {
+    final sun1 = date1.subtract(Duration(days: date1.weekday % 7));
+    final sun2 = date2.subtract(Duration(days: date2.weekday % 7));
+    return sun1.year == sun2.year && sun1.month == sun2.month && sun1.day == sun2.day;
   }
 }

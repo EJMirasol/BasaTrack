@@ -184,20 +184,24 @@ class ReadingRepository {
     return progress.currentStreak;
   }
 
-  /// Get week schedules for the current week (Sunday to Saturday)
-  List<DailySchedule> getCurrentWeekSchedules() {
-    final now = DateTime.now();
-    // Calculate Sunday of current week (Lord's Day = 0)
-    final currentWeekday = now.weekday % 7; // Sun=0, Mon=1, ..., Sat=6
-    final sundayDate = now.subtract(Duration(days: currentWeekday));
+  /// Get week schedules for a specific week (Sunday to Saturday) containing the given date
+  List<DailySchedule> getWeekSchedules(DateTime date) {
+    // Calculate Sunday of the week containing 'date'
+    final weekday = date.weekday % 7; // Sun=0, Mon=1, ..., Sat=6
+    final sundayDate = _normalizeDate(date.subtract(Duration(days: weekday)));
     
     final weekSchedules = <DailySchedule>[];
     for (int i = 0; i < 7; i++) {
-      final date = sundayDate.add(Duration(days: i));
-      weekSchedules.add(getScheduleForDate(date));
+      final currentDay = sundayDate.add(Duration(days: i));
+      weekSchedules.add(getScheduleForDate(currentDay));
     }
     
     return weekSchedules;
+  }
+
+  /// Get week schedules for the current week (Sunday to Saturday)
+  List<DailySchedule> getCurrentWeekSchedules() {
+    return getWeekSchedules(DateTime.now());
   }
 
   /// Get all missed schedules (past days with incomplete tasks)
