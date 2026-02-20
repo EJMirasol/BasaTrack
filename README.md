@@ -1,6 +1,6 @@
 # BasaTrack
 
-This application assists saints in the Lord's Recovery, specifically in the Southern Philippines, in tracking their daily progress through a synchronized two-year Bible reading schedule. It aims to encourage consistency and corporate pursuit.
+This application assists the brothers and sisters in the Lord's Recovery, specifically in the Southern Philippines, in tracking their daily progress through a synchronized two-year Bible reading schedule. It aims to encourage consistency and corporate pursuit.
 
 ## Features
 
