@@ -11,7 +11,6 @@ This application assists the brothers and sisters in the Lord's Recovery, specif
 
 📊 **Advanced Statistics & Progress Monitoring**
 - **Detailed Stats Dashboard**: Track Backlogs, Completed Tasks, and Total Week Streaks.
-- **Personal Best**: See your longest reading streak displayed with a "Personal Best" badge.
 - **Weekly Overview**: A visual 7-day tracker showing your completion status for the current week.
 - **Bible Reading Progress**: Separate progress bars for Old Testament and New Testament completion.
 - **Total Days Read**: Milestone tracking for total reading activity.
