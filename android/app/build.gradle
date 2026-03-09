@@ -65,8 +65,8 @@ android {
         applicationId "com.lrph.basatrack"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 124
+        versionName "v1.24"
         multiDexEnabled true
     }
 
