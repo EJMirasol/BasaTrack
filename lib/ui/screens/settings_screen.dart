@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/reading_provider.dart';
 import '../../providers/streak_provider.dart';
@@ -49,6 +51,14 @@ class SettingsScreen extends StatelessWidget {
             title: const Text('Exit Session'),
             subtitle: const Text('Sign out of the current local session'),
             onTap: () => _handleExit(context, authProvider),
+          ),
+          const Divider(),
+          _buildSectionHeader(context, 'About'),
+          ListTile(
+            leading: const Icon(Icons.info_outline, color: AppColors.primary),
+            title: const Text('About BasaTrack'),
+            subtitle: const Text('App info and feedback'),
+            onTap: () => _showAboutDialog(context),
           ),
           const Divider(),
           Padding(
@@ -154,6 +164,140 @@ class SettingsScreen extends StatelessWidget {
 
     if (confirmed == true) {
       await authProvider.signOut();
+    }
+  }
+
+  void _showAboutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // App Icon
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(
+                Icons.menu_book_rounded,
+                size: 48,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // App Name
+            const Text(
+              'BasaTrack for Android',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Version
+            const Text(
+              'v1.24',
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Feedback Section
+            const Text(
+              'Send feedback to:',
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Email Button
+            InkWell(
+              onTap: () => _launchEmail(context),
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.email_outlined,
+                      size: 18,
+                      color: AppColors.primary,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'basatrackdev010426@gmail.com',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _launchEmail(BuildContext context) async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'basatrackdev010426@gmail.com',
+      queryParameters: {
+        'subject': 'BasaTrack Feedback',
+      },
+    );
+    
+    try {
+      if (await canLaunchUrl(emailUri)) {
+        await launchUrl(emailUri);
+      } else {
+        // Copy to clipboard as fallback
+        await Clipboard.setData(
+          const ClipboardData(text: 'basatrackdev010426@gmail.com'),
+        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Email address copied to clipboard'),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Copy to clipboard as fallback
+      await Clipboard.setData(
+        const ClipboardData(text: 'basatrackdev010426@gmail.com'),
+      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Email address copied to clipboard'),
+          ),
+        );
+      }
     }
   }
 }
