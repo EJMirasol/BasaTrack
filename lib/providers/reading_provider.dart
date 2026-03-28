@@ -8,7 +8,7 @@ import '../data/services/notification_service.dart';
 class ReadingProvider with ChangeNotifier {
   final ReadingRepository _repository;
   final NotificationService _notificationService = NotificationService();
-  
+
   DailySchedule? _currentSchedule;
   UserProgress? _userProgress;
   bool _isLoading = false;
@@ -23,12 +23,13 @@ class ReadingProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasData => _currentSchedule != null;
-  
+
   /// Get today's reading schedule
   int get completedTasksCount => _currentSchedule?.completedCount ?? 0;
   int get totalTasksCount => _currentSchedule?.totalCount ?? 0;
   bool get allTasksCompleted => _currentSchedule?.allCompleted ?? false;
-  double get completionPercentage => _currentSchedule?.completionPercentage ?? 0.0;
+  double get completionPercentage =>
+      _currentSchedule?.completionPercentage ?? 0.0;
 
   /// Initialize and load today's schedule
   Future<void> loadTodaySchedule() async {
@@ -38,9 +39,9 @@ class ReadingProvider with ChangeNotifier {
     try {
       _currentSchedule = _repository.getTodaySchedule();
       _userProgress = _repository.getUserProgress();
-      
+
       _updateMissedReadingNotification();
-      
+
       notifyListeners();
     } catch (e) {
       _error = 'Failed to load schedule: $e';
@@ -58,13 +59,13 @@ class ReadingProvider with ChangeNotifier {
 
       final scheduleDate = targetDate.toIso8601String();
       await _repository.toggleTaskCompletion(scheduleDate, taskId);
-      
+
       // Reload schedule and progress
       _currentSchedule = _repository.getTodaySchedule();
       _userProgress = _repository.getUserProgress();
-      
+
       _updateMissedReadingNotification();
-      
+
       notifyListeners();
     } catch (e) {
       _error = 'Failed to toggle task: $e';
@@ -164,6 +165,11 @@ class ReadingProvider with ChangeNotifier {
   /// Get total NT tasks completed
   int getNTCompletedCount() {
     return _repository.getNTCompletedCount();
+  }
+
+  /// Get all completed task IDs
+  Set<String> getCompletedTaskIds() {
+    return _repository.getAllCompletedTaskIds();
   }
 
   /// Reset all data (for testing)

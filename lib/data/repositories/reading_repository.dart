@@ -22,13 +22,13 @@ class ReadingRepository {
   DailySchedule getScheduleForDate(DateTime date) {
     // Check if schedule exists in storage
     var schedule = _storageService.getSchedule(date);
-    
+
     if (schedule == null) {
       // Create new schedule from reading plan
       schedule = _createScheduleForDate(date);
       _storageService.saveSchedule(schedule);
     }
-    
+
     return schedule;
   }
 
@@ -36,7 +36,7 @@ class ReadingRepository {
   DailySchedule _createScheduleForDate(DateTime date) {
     final dayOfPlan = _getDayOfPlan(date);
     final readings = ReadingPlanData.getReadingsForDay(dayOfPlan);
-    
+
     return DailySchedule(
       date: _normalizeDate(date),
       tasks: readings,
@@ -47,20 +47,20 @@ class ReadingRepository {
   Future<void> toggleTaskCompletion(String scheduleDate, String taskId) async {
     final date = DateTime.parse(scheduleDate);
     final schedule = getScheduleForDate(date);
-    
+
     // Find and toggle the task
     final task = schedule.tasks.firstWhere(
       (t) => t.id == taskId,
       orElse: () => throw Exception('Task not found: $taskId'),
     );
-    
+
     final wasAllCompleted = schedule.allCompleted;
     task.toggleCompletion();
     final isNowAllCompleted = schedule.allCompleted;
-    
+
     // Save updated schedule
     await _storageService.saveSchedule(schedule);
-    
+
     // Always check for progress update regardless of whether it's today
     // This allows backlogs to count towards streaks
     if (!wasAllCompleted && isNowAllCompleted) {
@@ -76,17 +76,17 @@ class ReadingRepository {
   /// Mark task as completed
   Future<void> completeTask(DateTime date, String taskId) async {
     final schedule = getScheduleForDate(date);
-    
+
     final task = schedule.tasks.firstWhere(
       (t) => t.id == taskId,
       orElse: () => throw Exception('Task not found: $taskId'),
     );
-    
+
     if (!task.isCompleted) {
       task.isCompleted = true;
       task.completedAt = DateTime.now();
       await _storageService.saveSchedule(schedule);
-      
+
       // Update progress if all tasks completed
       if (schedule.allCompleted) {
         await _updateProgressForCompletedDay(date);
@@ -97,15 +97,16 @@ class ReadingRepository {
   /// Update user progress after completing a day
   Future<void> _updateProgressForCompletedDay(DateTime date) async {
     final progress = getUserProgress();
-    
+
     // Only update if this day hasn't been counted yet
     final normalizedDate = _normalizeDate(date);
-    final normalizedLastRead = progress.lastReadDate != null 
+    final normalizedLastRead = progress.lastReadDate != null
         ? _normalizeDate(progress.lastReadDate!)
         : null;
-    
+
     // Only count if this is a new completion (not already counted today)
-    if (normalizedLastRead == null || !_isSameDay(normalizedDate, normalizedLastRead)) {
+    if (normalizedLastRead == null ||
+        !_isSameDay(normalizedDate, normalizedLastRead)) {
       progress.completeDay(date);
       await _storageService.saveProgress(progress);
     }
@@ -122,17 +123,18 @@ class ReadingRepository {
   Future<void> _removeProgressForDay(DateTime date) async {
     final progress = getUserProgress();
     final normalizedDate = _normalizeDate(date);
-    final normalizedLastRead = progress.lastReadDate != null 
+    final normalizedLastRead = progress.lastReadDate != null
         ? _normalizeDate(progress.lastReadDate!)
         : null;
-    
+
     // Only remove if this was the last completed day
-    if (normalizedLastRead != null && _isSameDay(normalizedDate, normalizedLastRead)) {
+    if (normalizedLastRead != null &&
+        _isSameDay(normalizedDate, normalizedLastRead)) {
       // Decrement streak
       if (progress.currentStreak > 0) {
         progress.currentStreak--;
       }
-      
+
       // If streak is now 0, clear last read date
       if (progress.currentStreak == 0) {
         progress.lastReadDate = null;
@@ -140,10 +142,11 @@ class ReadingRepository {
         // Find the previous completed date from schedules
         // For simplicity, just move last read date back by 1 day
         // In a full implementation, you'd track all completed dates
-        final previousDate = normalizedLastRead.subtract(const Duration(days: 1));
+        final previousDate =
+            normalizedLastRead.subtract(const Duration(days: 1));
         progress.lastReadDate = previousDate;
       }
-      
+
       await _storageService.saveProgress(progress);
     }
   }
@@ -151,13 +154,13 @@ class ReadingRepository {
   /// Get user progress
   UserProgress getUserProgress() {
     final progress = _storageService.getProgress();
-    
+
     // Check if streak should be broken due to missed days
     if (progress.isStreakBroken) {
       progress.breakStreak();
       _storageService.saveProgress(progress);
     }
-    
+
     return progress;
   }
 
@@ -189,13 +192,13 @@ class ReadingRepository {
     // Calculate Sunday of the week containing 'date'
     final weekday = date.weekday % 7; // Sun=0, Mon=1, ..., Sat=6
     final sundayDate = _normalizeDate(date.subtract(Duration(days: weekday)));
-    
+
     final weekSchedules = <DailySchedule>[];
     for (int i = 0; i < 7; i++) {
       final currentDay = sundayDate.add(Duration(days: i));
       weekSchedules.add(getScheduleForDate(currentDay));
     }
-    
+
     return weekSchedules;
   }
 
@@ -211,27 +214,27 @@ class ReadingRepository {
     final now = DateTime.now();
     final today = _normalizeDate(now);
     final missedSchedules = <DailySchedule>[];
-    
+
     // Get the reading plan start date
     final planStart = ReadingPlanData.planStartDate;
     final normalizedPlanStart = _normalizeDate(planStart);
-    
+
     // Calculate days to check (from plan start to yesterday)
     final daysToCheck = today.difference(normalizedPlanStart).inDays;
-    
+
     // Generate and check all schedules from first Sunday to yesterday
     for (int i = 0; i < daysToCheck; i++) {
       final date = normalizedPlanStart.add(Duration(days: i));
-      
+
       // This will create the schedule if it doesn't exist
       final schedule = getScheduleForDate(date);
-      
+
       // Include all incomplete schedules in backlog
       if (!schedule.allCompleted) {
         missedSchedules.add(schedule);
       }
     }
-    
+
     return missedSchedules;
   }
 
@@ -261,7 +264,9 @@ class ReadingRepository {
     final allSchedules = _storageService.getAllSchedules();
     int count = 0;
     for (final schedule in allSchedules) {
-      count += schedule.tasks.where((t) => t.id.endsWith('_ot') && t.isCompleted).length;
+      count += schedule.tasks
+          .where((t) => t.id.endsWith('_ot') && t.isCompleted)
+          .length;
     }
     return count;
   }
@@ -271,9 +276,25 @@ class ReadingRepository {
     final allSchedules = _storageService.getAllSchedules();
     int count = 0;
     for (final schedule in allSchedules) {
-      count += schedule.tasks.where((t) => t.id.endsWith('_nt') && t.isCompleted).length;
+      count += schedule.tasks
+          .where((t) => t.id.endsWith('_nt') && t.isCompleted)
+          .length;
     }
     return count;
+  }
+
+  /// Get all completed task IDs across all schedules
+  Set<String> getAllCompletedTaskIds() {
+    final allSchedules = _storageService.getAllSchedules();
+    final completedIds = <String>{};
+    for (final schedule in allSchedules) {
+      for (final task in schedule.tasks) {
+        if (task.isCompleted) {
+          completedIds.add(task.id);
+        }
+      }
+    }
+    return completedIds;
   }
 
   /// Get total count of completed weeks (7 days fully completed ON TIME)
@@ -281,25 +302,25 @@ class ReadingRepository {
   int getTotalWeekStreaksCount() {
     final now = DateTime.now();
     final today = _normalizeDate(now);
-    
+
     // Get the reading plan start date
     final planStart = ReadingPlanData.planStartDate;
     final normalizedPlanStart = _normalizeDate(planStart);
-    
+
     // Calculate how many full weeks have passed since start
     final daysSinceStart = today.difference(normalizedPlanStart).inDays;
     final fullWeeksPassed = (daysSinceStart + 1) ~/ 7;
-    
+
     int completedWeeks = 0;
-    
+
     for (int w = 0; w < fullWeeksPassed; w++) {
       final weekStartDate = normalizedPlanStart.add(Duration(days: w * 7));
       bool weekStreak = true;
-      
+
       for (int d = 0; d < 7; d++) {
         final date = weekStartDate.add(Duration(days: d));
         final schedule = getScheduleForDate(date);
-        
+
         // 1. Must be fully completed
         if (!schedule.allCompleted) {
           weekStreak = false;
@@ -309,7 +330,7 @@ class ReadingRepository {
         // 2. Must be completed ON TIME (not from backlog)
         // If completedAt date is after schedule date, it was a backlog completion
         final anyTaskLate = schedule.tasks.any((task) {
-          if (task.completedAt == null) return true; 
+          if (task.completedAt == null) return true;
           final completedDateNorm = _normalizeDate(task.completedAt!);
           final scheduleDateNorm = _normalizeDate(schedule.date);
           return completedDateNorm.isAfter(scheduleDateNorm);
@@ -320,12 +341,12 @@ class ReadingRepository {
           break;
         }
       }
-      
+
       if (weekStreak) {
         completedWeeks++;
       }
     }
-    
+
     return completedWeeks;
   }
 

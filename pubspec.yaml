@@ -1,7 +1,7 @@
 name: basa_track
 description: A beautiful Flutter app for tracking daily Bible reading with streaks and motivation.
 publish_to: 'none'
-version: 1.24.0+1
+version: 1.25.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -40,6 +40,9 @@ dependencies:
   # URL Launcher (for email feedback)
   url_launcher: ^6.3.1
 
+  # PDF Viewer
+  syncfusion_flutter_pdfviewer: ^33.1.45
+
   # Notifications
   flutter_local_notifications: ^17.2.3
   timezone: ^0.9.4
@@ -64,6 +67,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/PDF/
     - assets/google_fonts/
 
   fonts:

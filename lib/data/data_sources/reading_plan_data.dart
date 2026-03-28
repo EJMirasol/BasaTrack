@@ -41,6 +41,18 @@ class ReadingPlanData {
     }
   }
 
+  /// Get the number of days in a given week (6 or 7)
+  static int getDaysInWeek(int weekNumber) {
+    final weekReadings = _readingPlan[weekNumber];
+    if (weekReadings != null) return weekReadings.length;
+    return weekNumber <= 31 ? 7 : 6;
+  }
+
+  /// Get raw readings for a specific week
+  static List<Map<String, String>>? getWeekReadings(int weekNumber) {
+    return _readingPlan[weekNumber];
+  }
+
   /// Get reading tasks for a specific day (1-728)
   static List<ReadingTask> getReadingsForDay(int dayOfPlan) {
     // Normalize to 1-728 range (104 weeks * 7 days)
@@ -238,11 +250,11 @@ class ReadingPlanData {
       {'ot': 'Exo 24:1-18', 'nt': 'Matt 27:45-56'},
       {'ot': 'Exo 25:1-22', 'nt': 'Matt 27:57—28:15'},
       {'ot': 'Exo 25:23-40', 'nt': 'Matt 28:16-20'},
-      {'ot': 'Exo 26:1-14', 'nt': 'Mark 1:1-11'},
+      {'ot': 'Exo 26:1-14', 'nt': 'Mark 1:1'},
       {'ot': 'Exo 26:15-37', 'nt': 'Mark 1:2-6'},
       {'ot': 'Exo 27:1-21', 'nt': 'Mark 1:7-13'},
     ],
-  // Week 13
+    // Week 13
     13: [
       {'ot': 'Exo 28:1-21', 'nt': 'Mark 1:14-28'},
       {'ot': 'Exo 28:22-43', 'nt': 'Mark 1:29-45'},

@@ -52,20 +52,23 @@ class SettingsScreen extends StatelessWidget {
             subtitle: const Text('Sign out of the current local session'),
             onTap: () => _handleExit(context, authProvider),
           ),
-          const Divider(),
-          _buildSectionHeader(context, 'About'),
-          ListTile(
-            leading: const Icon(Icons.info_outline, color: AppColors.primary),
-            title: const Text('About BasaTrack'),
-            subtitle: const Text('App info and feedback'),
-            onTap: () => _showAboutDialog(context),
-          ),
+          if (!Platform.isIOS) ...[
+            const Divider(),
+            _buildSectionHeader(context, 'About'),
+            ListTile(
+              leading: const Icon(Icons.info_outline, color: AppColors.primary),
+              title: const Text('About BasaTrack'),
+              subtitle: const Text('App info and feedback'),
+              onTap: () => _showAboutDialog(context),
+            ),
+          ],
           const Divider(),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
               'Your data is stored locally on this device. Use Export to back up your progress.',
-              style: theme.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
           ),
@@ -91,14 +94,14 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _handleExport(BuildContext context) async {
     final messenger = ScaffoldMessenger.of(context);
     final storage = StorageService();
-    
+
     try {
       final data = await storage.exportData();
       final tempDir = await getTemporaryDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final file = File('${tempDir.path}/basatrack_backup_$timestamp.json');
       await file.writeAsString(data);
-      
+
       await Share.shareXFiles(
         [XFile(file.path)],
         subject: 'BasaTrack Data Backup',
@@ -117,18 +120,18 @@ class SettingsScreen extends StatelessWidget {
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
-      
+
       if (result != null && result.files.single.path != null) {
         final file = File(result.files.single.path!);
         final content = await file.readAsString();
-        
+
         final storage = StorageService();
         await storage.importData(content);
-        
+
         messenger.showSnackBar(
           const SnackBar(content: Text('Progress imported successfully!')),
         );
-        
+
         // Reload data after import
         if (context.mounted) {
           context.read<ReadingProvider>().loadTodaySchedule();
@@ -142,12 +145,14 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _handleExit(BuildContext context, AuthProvider authProvider) async {
+  Future<void> _handleExit(
+      BuildContext context, AuthProvider authProvider) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Exit Session?'),
-        content: const Text('This will return you to the start screen. Your data will remain on this device.'),
+        content: const Text(
+            'This will return you to the start screen. Your data will remain on this device.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -175,18 +180,13 @@ class SettingsScreen extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // App Icon
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Icon(
-                Icons.menu_book_rounded,
-                size: 48,
-                color: AppColors.primary,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(
+                'assets/logo.png',
+                width: 80,
+                height: 80,
+                fit: BoxFit.cover,
               ),
             ),
             const SizedBox(height: 16),
@@ -202,7 +202,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 4),
             // Version
             const Text(
-              'v1.24',
+              'v1.25',
               style: TextStyle(
                 fontSize: 16,
                 color: AppColors.textSecondary,
@@ -223,7 +223,8 @@ class SettingsScreen extends StatelessWidget {
               onTap: () => _launchEmail(context),
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
@@ -237,12 +238,15 @@ class SettingsScreen extends StatelessWidget {
                       color: AppColors.primary,
                     ),
                     SizedBox(width: 8),
-                    Text(
-                      'basatrackdev010426@gmail.com',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w500,
+                    Flexible(
+                      child: Text(
+                        'basatrackdev010426@gmail.com',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
@@ -269,7 +273,7 @@ class SettingsScreen extends StatelessWidget {
         'subject': 'BasaTrack Feedback',
       },
     );
-    
+
     try {
       if (await canLaunchUrl(emailUri)) {
         await launchUrl(emailUri);
