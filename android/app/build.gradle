@@ -12,11 +12,6 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
@@ -65,8 +60,14 @@ android {
         applicationId "com.lrph.basatrack"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
-        versionCode 125
-        versionName "v1.25"
+        // Derive versionName and a monotonic versionCode from pubspec
+        // (via Flutter's flutter.versionName, e.g. 1.26.0 -> versionCode 12600).
+        def versionParts = flutterVersionName.tokenize('.')
+        def major = versionParts.size() > 0 ? versionParts[0].toInteger() : 0
+        def minor = versionParts.size() > 1 ? versionParts[1].toInteger() : 0
+        def patch = versionParts.size() > 2 ? versionParts[2].toInteger() : 0
+        versionCode major * 10000 + minor * 100 + patch
+        versionName flutterVersionName
         multiDexEnabled true
     }
 
