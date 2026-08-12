@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:basa_track/data/repositories/storage_service.dart';
 import 'package:basa_track/data/models/user_progress.dart';
 import 'package:basa_track/data/models/daily_schedule.dart';
@@ -13,7 +14,15 @@ void main() {
 
   setUp(() async {
     await setUpTestHive();
-    
+
+    PackageInfo.setMockInitialValues(
+      appName: 'BasaTrack',
+      packageName: 'basa_track',
+      version: '9.9.9',
+      buildNumber: '9',
+      buildSignature: '',
+    );
+
     // Register adapters
     Hive.registerAdapter(DailyScheduleAdapter());
     Hive.registerAdapter(ReadingTaskAdapter());
@@ -53,7 +62,7 @@ void main() {
     
     expect(decoded.containsKey('progress'), true);
     expect(decoded.containsKey('schedules'), true);
-    expect(decoded['version'], AppConstants.appVersion);
+    expect(decoded['version'], '9.9.9');
 
     // 3. Clear and Import
     await storageService.clearAll();

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../models/daily_schedule.dart';
 import '../models/reading_task.dart';
 import '../models/user_progress.dart';
@@ -113,9 +114,10 @@ class StorageService {
   /// Export all data as a JSON string
   Future<String> exportData() async {
     await _ensureInitialized();
-    
+
+    final info = await PackageInfo.fromPlatform();
     final Map<String, dynamic> data = {
-      'version': AppConstants.appVersion,
+      'version': info.version,
       'exportDate': DateTime.now().toIso8601String(),
       'schedules': {},
       'progress': getProgress().toJson(),

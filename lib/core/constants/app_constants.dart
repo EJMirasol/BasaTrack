@@ -4,7 +4,6 @@ class AppConstants {
 
   // App Information
   static const String appName = 'BasaTrack';
-  static const String appVersion = '1.25.0';
 
   // Storage Keys
   static const String hiveBoxSchedules = 'schedules';
