@@ -390,7 +390,7 @@ class ReadingPlanData {
       {'ot': 'Deut 8:1-20', 'nt': 'Luke 17:20-37'},
       {'ot': 'Deut 9:1-29', 'nt': 'Luke 18:1-14'},
       {'ot': 'Deut 10:1-22', 'nt': 'Luke 18:15-30'},
-      {'ot': 'Deut 11:1-32', 'nt': 'Luke 31-43'},
+      {'ot': 'Deut 11:1-32', 'nt': 'Luke 18:31-43'},
       {'ot': 'Deut 12:1-32', 'nt': 'Luke 19:1-10'},
       {'ot': 'Deut 13:1—14:21', 'nt': 'Luke 19:11-27'},
     ],
@@ -446,6 +446,7 @@ class ReadingPlanData {
     ],
 // Week 32
     32: [
+      {'ot': 'Judg (Huk) 1:1-36', 'nt': 'John 7:1-9'},
       {'ot': 'Judg (Huk) 2:1-23', 'nt': 'John 7:10-24'},
       {'ot': 'Judg (Huk) 3:1-31', 'nt': 'John 7:25-36'},
       {'ot': 'Judg (Huk) 4:1-24', 'nt': 'John 7:37-52'},
@@ -637,7 +638,7 @@ class ReadingPlanData {
     51: [
       {'ot': '2 Chron 23:1—24:27', 'nt': 'Rom 10:16—11:10'},
       {'ot': '2 Chron 25:1—26:23', 'nt': 'Rom 11:11-22'},
-      {'ot': '2 Chron 27"1—28:27', 'nt': 'Rom 11:23-36'},
+      {'ot': '2 Chron 27:1—28:27', 'nt': 'Rom 11:23-36'},
       {'ot': '2 Chron 29:1-36', 'nt': 'Rom 12:1-3'},
       {'ot': '2 Chron 30:1—31:21', 'nt': 'Rom 12:4-21'},
       {'ot': '2 Chron 32:1-33', 'nt': 'Rom 13:1-14'},
