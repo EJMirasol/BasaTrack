@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/reading_provider.dart';
 import '../../providers/streak_provider.dart';
@@ -172,7 +173,10 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
-  void _showAboutDialog(BuildContext context) {
+  Future<void> _showAboutDialog(BuildContext context) async {
+    final info = await PackageInfo.fromPlatform();
+    if (!context.mounted) return;
+    final version = 'v${info.version.split('.').take(2).join('.')}';
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -201,9 +205,9 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             // Version
-            const Text(
-              'v1.25',
-              style: TextStyle(
+            Text(
+              version,
+              style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.textSecondary,
               ),
